@@ -1,8 +1,9 @@
 // Prayer Times Page — Namaz Vakitleri
-// Uses OFFLINE PrayTimes engine (Jafari/Caferi method)
-// No API dependency — works without internet
+// Öncelikli olarak statik Caferi verileri kullanır (ehlibeytalimleri.com)
+// Statik veri yoksa offline PrayTimes hesaplamasına geçer
 
 import { getPrayerTimes, getHijriDate } from '../praytimes.js';
+import { getStaticPrayerTimes, getStaticDataRange } from '../prayerdata.js';
 
 // Ankara coordinates & timezone
 const ANKARA_LAT = 39.9334;
@@ -13,8 +14,8 @@ const PRAYER_NAMES = [
   { key: 'Fajr', name: 'İmsak', icon: '🌙' },
   { key: 'Sunrise', name: 'Güneş', icon: '🌅' },
   { key: 'Dhuhr', name: 'Öğle', icon: '☀️' },
-  { key: 'Sunset', name: 'Akşam (Güneş Batışı)', icon: '🌇' },
-  { key: 'Maghrib', name: 'Akşam (Meğrib)', icon: '🌆' },
+  { key: 'Asr', name: 'İkindi', icon: '🌤️' },
+  { key: 'Maghrib', name: 'Akşam', icon: '🌆' },
   { key: 'Isha', name: 'Yatsı', icon: '🌃' },
 ];
 
@@ -45,13 +46,31 @@ let abdestNotified = {};     // track abdest reminders
 
 function calculatePrayerTimes() {
   const now = new Date();
+
+  // 1) Önce statik veri kontrol et (ehlibeytalimleri.com verisi)
+  const staticData = getStaticPrayerTimes(now);
+  if (staticData) {
+    // Statik veride Sunset ve Midnight yok — algoritmadan al
+    const algoTimes = getPrayerTimes(now, ANKARA_LAT, ANKARA_LNG, ANKARA_TZ);
+    staticData.timings.Sunset = algoTimes.Sunset;
+    staticData.timings.Midnight = algoTimes.Midnight;
+    return {
+      timings: staticData.timings,
+      hijri: staticData.hijri,
+      date: now,
+      isStatic: true,
+    };
+  }
+
+  // 2) Statik veri yoksa algoritmik hesapla
   const timings = getPrayerTimes(now, ANKARA_LAT, ANKARA_LNG, ANKARA_TZ);
   const hijri = getHijriDate(now);
   
   return {
     timings,
     hijri,
-    date: now
+    date: now,
+    isStatic: false,
   };
 }
 
@@ -329,9 +348,10 @@ export async function renderPrayerPage() {
     Notification.requestPermission();
   }
 
-  // Calculate offline — instant!
+  // Calculate — statik veri öncelikli, yoksa algoritmik
   const data = calculatePrayerTimes();
   const timings = data.timings;
+  const isStatic = data.isStatic;
   const hijri = data.hijri;
   const nextPrayer = getNextPrayer(timings);
   
@@ -367,7 +387,9 @@ export async function renderPrayerPage() {
       <!-- Method badge -->
       <div style="text-align:center;margin-bottom:16px">
         <span class="badge badge--primary" style="font-size:11px;padding:6px 14px">
-          ✦ Caferi (Jafari) Hesaplaması · Offline
+          ${isStatic 
+            ? '✦ Caferi Ezan Vakitleri · ehlibeytalimleri.com' 
+            : '✦ Caferi (Jafari) Hesaplaması · Offline'}
         </span>
       </div>
 
@@ -484,10 +506,16 @@ export async function renderPrayerPage() {
 
       <!-- Info card -->
       <div class="card" style="margin-top:20px;font-size:13px;color:var(--text-secondary);line-height:1.6">
-        <strong class="text-accent">ℹ️ Hesaplama Methodu:</strong><br/>
-        Caferi (Shia Ithna-Ashari / Jafari) — astronomik formüller ile hesaplanmıştır.<br/>
-        <span class="text-muted">İmsak: 16° · Yatsı: 14° · Meğrib: Güneş batışı + kızıllık (4°)</span><br/>
-        <span class="text-muted">İnternet bağlantısı gerektirmez.</span>
+        ${isStatic ? `
+          <strong class="text-accent">✅ Veri Kaynağı:</strong><br/>
+          Ehl-i Beyt Âlimleri Derneği (ehlibeytalimleri.com) — Caferi ezan vakitleri.<br/>
+          <span class="text-muted">Statik veri · Güncel ve doğrulanmış vakitler kullanılmaktadır.</span>
+        ` : `
+          <strong class="text-accent">ℹ️ Hesaplama Methodu:</strong><br/>
+          Caferi (Shia Ithna-Ashari / Jafari) — astronomik formüller ile hesaplanmıştır.<br/>
+          <span class="text-muted">İmsak: 16° · Yatsı: 14° · Meğrib: Güneş batışı + kızıllık (4°)</span><br/>
+          <span class="text-muted">Bu tarih için statik veri bulunmadığı için hesaplama kullanılmaktadır.</span>
+        `}
       </div>
     </div>
   `;
