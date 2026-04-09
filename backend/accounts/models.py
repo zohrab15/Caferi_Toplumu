@@ -3,9 +3,9 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
-        ('üye', 'Üye'),
-        ('yönetici', 'Yönetici'),
-        ('hoca', 'Hoca'),
+        ('member', 'Üye'),
+        ('admin', 'Yönetici'),
+        ('imam', 'Hoca'),
     )
 
     BLOOD_GROUP_CHOICES = (
