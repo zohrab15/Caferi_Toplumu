@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0D4F2B" />
+  <meta name="description" content="Ehli-Beyt Ankara — Ankara Caferi Toplumu Dijital Ekosistemi. Namaz vakitleri, duyurular, dini içerik, bağış ve ziyaret koordinasyonu." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Ehli-Beyt Ankara</title>
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/prayer.css" />
+  <link rel="stylesheet" href="/css/community.css" />
+  <link rel="stylesheet" href="/css/ilim.css" />
+  <link rel="stylesheet" href="/css/bagis.css" />
+  <link rel="stylesheet" href="/css/ziyaret.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header" id="app-header"></header>
+
+    <!-- Main content -->
+    <main class="page-container" id="page-content"></main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottom-nav"></nav>
+  </div>
+
+  <script>
+    // Force cache clear and unregister old service workers
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+          console.log('[App] Unregistered old SW');
+        }
+      });
+      caches.keys().then((keyList) => {
+        return Promise.all(keyList.map((key) => {
+          console.log('[App] Deleting cache:', key);
+          return caches.delete(key);
+        }));
+      });
+    }
+  </script>
+  <!-- Load app.js dynamically with cachebuster -->
+  <script>
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = '/js/app.js?v=' + new Date().getTime();
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

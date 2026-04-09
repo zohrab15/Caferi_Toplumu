@@ -1,0 +1,58 @@
+/* ========================= */
+/* RESPONSIVE DESIGN         */
+/* ========================= */
+
+/* Small phones (320px) */
+@media (max-width: 359px) {
+  :root {
+    --font-size-base: 0.875rem;
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
+  }
+
+  .page-container {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Standard phones (360px-479px) — default */
+
+/* Larger phones / small tablets (480px+) */
+@media (min-width: 480px) {
+  :root {
+    --max-width: 480px;
+  }
+
+  #app {
+    box-shadow: -1px 0 0 var(--border-subtle), 1px 0 0 var(--border-subtle);
+  }
+}
+
+/* Tablets (768px+) */
+@media (min-width: 768px) {
+  :root {
+    --max-width: 480px;
+  }
+
+  body {
+    background: #050508;
+  }
+
+  #app {
+    box-shadow: var(--shadow-lg), -1px 0 0 var(--border-subtle), 1px 0 0 var(--border-subtle);
+  }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+}

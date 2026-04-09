@@ -1,0 +1,285 @@
+/* ========================= */
+/* İLİM / EDUCATION PAGE     */
+/* ========================= */
+
+/* Hadith Card */
+.hadith-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl) var(--space-xl);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+  background: linear-gradient(160deg, rgba(13, 79, 43, 0.2), rgba(212, 168, 67, 0.08), rgba(13, 79, 43, 0.1));
+  border: 1px solid rgba(212, 168, 67, 0.2);
+  overflow: hidden;
+}
+
+.hadith-card__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-accent);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: var(--space-lg);
+}
+
+.hadith-card__ornament-left,
+.hadith-card__ornament-right {
+  position: absolute;
+  font-size: 60px;
+  color: rgba(212, 168, 67, 0.06);
+  pointer-events: none;
+}
+
+.hadith-card__ornament-left {
+  top: 10px;
+  left: 10px;
+}
+
+.hadith-card__ornament-right {
+  bottom: 10px;
+  right: 10px;
+  transform: rotate(180deg);
+}
+
+.hadith-card__text {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: var(--space-md);
+  position: relative;
+  z-index: 1;
+}
+
+.hadith-card__source {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.hadith-card__ref {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.hadith-card__share {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-md);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hadith-card__share:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(212, 168, 67, 0.05);
+}
+
+/* Ask Section */
+.ask-section {
+  margin-bottom: var(--space-xl);
+}
+
+.ask-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  background: rgba(13, 79, 43, 0.08);
+  border: 1px solid rgba(13, 79, 43, 0.15);
+}
+
+.ask-header__icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.ask-header__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ask-header__desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Q&A List */
+.qa-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.qa-item {
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+.qa-item:hover {
+  border-color: var(--border-accent);
+}
+
+.qa-item__question {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.qa-item__q-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.qa-item__answer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 4px;
+}
+
+.qa-item__a-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  color: #1a1a1a;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.qa-item__date {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: var(--space-sm);
+}
+
+/* Library */
+.library-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-xl);
+}
+
+.library-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 14px var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.library-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+}
+
+.library-item__icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.library-item__info {
+  flex: 1;
+}
+
+.library-item__title {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+}
+
+.library-item__author {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.library-item__arrow {
+  font-size: 20px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.library-item:hover .library-item__arrow {
+  color: var(--color-accent);
+}
+
+/* Library Detail (expandable) */
+.library-detail {
+  padding: 12px var(--space-lg) 16px calc(var(--space-lg) + 44px);
+  background: rgba(13, 79, 43, 0.05);
+  border: 1px solid rgba(13, 79, 43, 0.1);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  margin-top: -2px;
+  margin-bottom: var(--space-sm);
+  animation: libraryDetailIn 0.25s ease;
+}
+
+@keyframes libraryDetailIn {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 200px; }
+}
+
+.library-detail__desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+.library-detail__actions {
+  display: flex;
+  gap: var(--space-sm);
+}

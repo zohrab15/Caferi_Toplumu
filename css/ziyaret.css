@@ -1,0 +1,251 @@
+/* ========================= */
+/* ZIYARET / PILGRIMAGE PAGE */
+/* ========================= */
+
+.ziyaret-hero {
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl) var(--space-lg);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  background: linear-gradient(160deg, #2a1a3a 0%, #1a0a2a 50%, #0a1a2a 100%);
+  border: 1px solid rgba(100, 60, 150, 0.3);
+}
+
+.ziyaret-hero__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-sm);
+  filter: drop-shadow(0 0 20px rgba(212, 168, 67, 0.3));
+}
+
+.ziyaret-hero__title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.ziyaret-hero__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+/* Tour Cards */
+.tour-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.tour-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+.tour-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.tour-card__image {
+  height: 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--space-sm);
+}
+
+.tour-card__badge { }
+
+.tour-card__content {
+  padding: var(--space-lg);
+}
+
+.tour-card__title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.tour-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: var(--space-sm);
+}
+
+.tour-card__detail {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.tour-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tour-card__price {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.tour-card__seats {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* Guide List */
+.guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-xl);
+}
+
+.guide-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 14px var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.guide-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+}
+
+.guide-item__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.guide-item__title {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.guide-item__desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.guide-item__arrow {
+  font-size: 20px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: transform var(--transition-fast);
+}
+
+/* Guide Detail (expandable) */
+.guide-detail {
+  padding: var(--space-lg);
+  background: rgba(13, 79, 43, 0.05);
+  border: 1px solid rgba(13, 79, 43, 0.1);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  margin-top: -2px;
+  margin-bottom: var(--space-sm);
+  animation: guideDetailIn 0.3s ease;
+}
+
+@keyframes guideDetailIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Ziyaretname Content */
+.ziyaret-content {
+  text-align: center;
+}
+
+.ziyaret-content__arabic {
+  font-family: var(--font-arabic);
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  line-height: 2.2;
+  direction: rtl;
+  margin-bottom: 4px;
+}
+
+.ziyaret-content__tr {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  font-style: italic;
+}
+
+.ziyaret-content__subtitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: var(--space-md);
+}
+
+.ziyaret-content__note {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-lg);
+  font-style: italic;
+}
+
+/* Holy Places Grid */
+.holy-places-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.holy-place {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: rgba(13, 79, 43, 0.08);
+  border: 1px solid rgba(13, 79, 43, 0.15);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.holy-place:hover {
+  background: rgba(13, 79, 43, 0.15);
+  border-color: var(--color-primary);
+}
+
+.holy-place__icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.holy-place__name {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.holy-place__info {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+/* Registration Form */
+.registration-form {
+  margin-bottom: var(--space-xl);
+}
+
+.registration-form__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+}

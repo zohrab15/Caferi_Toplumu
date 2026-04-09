@@ -1,0 +1,253 @@
+/* ========================= */
+/* BAGIS (DONATIONS) PAGE    */
+/* ========================= */
+
+.donation-hero {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  padding: var(--space-xl) var(--space-lg);
+  margin-bottom: var(--space-xl);
+  background: linear-gradient(160deg, rgba(212, 168, 67, 0.12), rgba(13, 79, 43, 0.1));
+  border: 1px solid var(--border-accent);
+  text-align: center;
+}
+
+.donation-hero__icon {
+  font-size: 40px;
+  margin-bottom: var(--space-sm);
+}
+
+.donation-hero__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.donation-hero__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* Campaign cards */
+.campaign-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.campaign-card {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+.campaign-card:hover {
+  border-color: var(--border-accent);
+}
+
+.campaign-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.campaign-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.campaign-card__title {
+  font-weight: 600;
+}
+
+.campaign-card__desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.campaign-card__progress {
+  margin-bottom: var(--space-sm);
+}
+
+.campaign-card__stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+.campaign-card__amount {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Donation categories */
+.donation-categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.donation-cat {
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.donation-cat:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-gold-glow);
+}
+
+.donation-cat--selected {
+  border-color: var(--color-accent);
+  background: rgba(212, 168, 67, 0.08);
+}
+
+.donation-cat__icon {
+  font-size: 28px;
+  margin-bottom: var(--space-sm);
+}
+
+.donation-cat__name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* Amount selection */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.amount-btn {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: center;
+}
+
+.amount-btn:hover,
+.amount-btn--selected,
+.amount-btn--active {
+  border-color: var(--color-accent);
+  background: rgba(212, 168, 67, 0.08);
+  color: var(--color-accent);
+}
+
+/* Donation type grid (Humus, Zekat, Sadaka, Camiye Katki) */
+.donation-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.donation-type-card {
+  padding: 14px 8px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.donation-type-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.donation-type-card--active {
+  border-color: var(--color-accent);
+  background: rgba(212, 168, 67, 0.1);
+  color: var(--color-accent);
+  box-shadow: 0 0 12px rgba(212, 168, 67, 0.15);
+}
+
+/* Donation form container */
+.donation-form-container {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 24px 20px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Bagis Hero */
+.bagis-hero {
+  text-align: center;
+  padding: 32px 20px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(212, 168, 67, 0.12), rgba(13, 79, 43, 0.1));
+  border: 1px solid var(--border-accent);
+}
+
+.bagis-hero__icon { font-size: 40px; margin-bottom: 8px; }
+.bagis-hero__title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.bagis-hero__subtitle { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* Campaign Progress */
+.campaign-progress { margin-top: 12px; }
+.campaign-progress__bar {
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.campaign-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.campaign-progress__stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.campaign-progress__collected { color: var(--color-accent); font-weight: 600; }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 24px 0;
+}
+
+@media (max-width: 400px) {
+  .donation-type-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
