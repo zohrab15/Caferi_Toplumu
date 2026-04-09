@@ -22,12 +22,23 @@ export async function renderIlimPage() {
   `;
 
   try {
-    const [todayHadith, recentQA] = await Promise.all([
+    let [todayHadith, recentQA] = await Promise.all([
       apiFetch('/ilim/hadith/today/'),
       apiFetch('/ilim/questions/')
     ]);
 
-    if (todayHadith._error) throw new Error("Veri çekilemedi");
+    // Backend henüz güncellenmediyse veya boşsa frontend tarafında varsayılan bir hadis göster
+    if (todayHadith._error) {
+      todayHadith = {
+        text: "İlim talep etmek her Müslüman'a farzdır.",
+        source: "Hz. Muhammed (s.a.a)",
+        reference: "Usul-u Kâfi, c.1, s.30"
+      };
+    }
+    
+    if (recentQA._error) {
+      recentQA = [];
+    }
 
     container.innerHTML = `
       <div class="page">
