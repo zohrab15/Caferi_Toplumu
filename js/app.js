@@ -1,16 +1,16 @@
 // Main App — SPA Router
-import { renderHeader } from './components/header.js?v=4';
-import { renderNavbar } from './components/navbar.js?v=4';
-import { renderPrayerPage, cleanupPrayerPage } from './pages/prayer.js?v=4';
-import { renderCommunityPage } from './pages/community.js?v=4';
-import { renderIlimPage } from './pages/ilim.js?v=4';
-import { renderBagisPage } from './pages/bagis.js?v=4';
-import { renderZiyaretPage } from './pages/ziyaret.js?v=4';
-import { renderKvkkPage } from './pages/kvkk.js?v=4';
-import { renderAuthPage } from './pages/auth.js?v=4';
-import { renderProfilePage } from './pages/profile.js?v=4';
-import { renderAdminPage } from './pages/admin.js?v=4';
-import { isLoggedIn } from './api.js?v=4';
+import { renderHeader } from './components/header.js';
+import { renderNavbar } from './components/navbar.js';
+import { renderPrayerPage, cleanupPrayerPage } from './pages/prayer.js';
+import { renderCommunityPage } from './pages/community.js';
+import { renderIlimPage } from './pages/ilim.js';
+import { renderBagisPage } from './pages/bagis.js';
+import { renderZiyaretPage } from './pages/ziyaret.js';
+import { renderKvkkPage } from './pages/kvkk.js';
+import { renderAuthPage } from './pages/auth.js';
+import { renderProfilePage } from './pages/profile.js';
+import { renderAdminPage } from './pages/admin.js';
+import { isLoggedIn } from './api.js';
 
 // Current page state
 let currentPage = 'prayer';

@@ -54,12 +54,7 @@
       });
     }
   </script>
-  <!-- Load app.js dynamically with cachebuster -->
-  <script>
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = '/js/app.js?v=' + new Date().getTime();
-    document.body.appendChild(script);
-  </script>
+  <!-- Load app.js directly so Vite can build it -->
+  <script type="module" src="/js/app.js"></script>
 </body>
 </html>
