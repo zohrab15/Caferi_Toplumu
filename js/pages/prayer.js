@@ -507,19 +507,7 @@ export async function renderPrayerPage() {
         </div>
       </div>
 
-      <!-- Info card -->
-      <div class="card" style="margin-top:20px;font-size:13px;color:var(--text-secondary);line-height:1.6">
-        ${isStatic ? `
-          <strong class="text-accent">✅ Veri Kaynağı:</strong><br/>
-          Ehl-i Beyt Âlimleri Derneği (ehlibeytalimleri.com) — Caferi ezan vakitleri.<br/>
-          <span class="text-muted">Statik veri · Güncel ve doğrulanmış vakitler kullanılmaktadır.</span>
-        ` : `
-          <strong class="text-accent">ℹ️ Hesaplama Methodu:</strong><br/>
-          Caferi (Shia Ithna-Ashari / Jafari) — astronomik formüller ile hesaplanmıştır.<br/>
-          <span class="text-muted">İmsak: 16° · Yatsı: 14° · Meğrib: Güneş batışı + kızıllık (4°)</span><br/>
-          <span class="text-muted">Bu tarih için statik veri bulunmadığı için hesaplama kullanılmaktadır.</span>
-        `}
-      </div>
+
     </div>
   `;
 
