@@ -12,8 +12,7 @@ def broadcast_push(payload):
         try:
             send_user_notification(user=user, payload=payload, ttl=1000)
         except Exception as e:
-            # Sessizce devam et
-            pass
+            print(f"Push Error ([{user.email}]): {e}")
 
 @receiver(post_save, sender=Announcement)
 def send_announcement_push(sender, instance, created, **kwargs):
