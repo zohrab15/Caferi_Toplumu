@@ -216,7 +216,7 @@ function formatAudioTime(sec) {
 // Check if it's time for prayer and auto-play ezan
 function checkPrayerNotification(timings) {
   const now = new Date();
-  const currentKey = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const currentKey = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
   
   for (const prayer of PRAYER_NAMES) {
     const time = timings[prayer.key];
