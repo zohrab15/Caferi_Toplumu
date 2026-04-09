@@ -38,6 +38,7 @@ const EZAN_LIST = [
 // State
 let selectedEzan = localStorage.getItem('selectedEzan') || 'haci-ruslan';
 let abdestReminder = localStorage.getItem('abdestReminder') !== 'false'; // default on
+let ezanAutoPlay = localStorage.getItem('ezanAutoPlay') !== 'false'; // default on
 let countdownInterval = null;
 let ezanAudio = null;
 let isPlaying = false;
@@ -239,8 +240,8 @@ function checkPrayerNotification(timings) {
       }
     }
     
-    // Ezan vakti
-    if (time === currentKey && !ezanNotified[prayer.key]) {
+    // Ezan vakti — sadece otomatik ezan açıksa çalışır
+    if (ezanAutoPlay && time === currentKey && !ezanNotified[prayer.key]) {
       ezanNotified[prayer.key] = true;
 
       // Show browser notification
@@ -424,7 +425,7 @@ export async function renderPrayerPage() {
       <div class="ezan-selector">
         <div class="section-header">
           <h2 class="section-title">Ezan Sesi</h2>
-          <span class="badge badge--accent" id="ezan-status">${isPlaying ? '🔊 Çalıyor' : '🔇 Sessiz'}</span>
+          <span class="badge badge--accent${!ezanAutoPlay ? ' badge--muted' : ''}" id="ezan-status">${isPlaying ? '🔊 Çalıyor' : (ezanAutoPlay ? '🔔 Aktif' : '🔇 Sessiz')}</span>
         </div>
 
         <!-- Audio player card -->
@@ -484,7 +485,7 @@ export async function renderPrayerPage() {
               </div>
             </div>
             <label class="toggle" for="toggle-ezan">
-              <input type="checkbox" id="toggle-ezan" checked />
+              <input type="checkbox" id="toggle-ezan" ${ezanAutoPlay ? 'checked' : ''} />
               <span class="toggle__slider"></span>
             </label>
           </div>
@@ -563,6 +564,28 @@ export async function renderPrayerPage() {
       }
     });
   });
+
+  // Toggle: Otomatik Ezan Bildirimi
+  const ezanToggle = document.getElementById('toggle-ezan');
+  if (ezanToggle) {
+    ezanToggle.checked = ezanAutoPlay;
+    ezanToggle.addEventListener('change', () => {
+      ezanAutoPlay = ezanToggle.checked;
+      localStorage.setItem('ezanAutoPlay', ezanAutoPlay ? 'true' : 'false');
+
+      // Status badge güncelle
+      const statusEl = document.getElementById('ezan-status');
+      if (statusEl) {
+        if (!ezanAutoPlay) {
+          statusEl.textContent = '🔇 Sessiz';
+          statusEl.classList.add('badge--muted');
+        } else {
+          statusEl.textContent = isPlaying ? '🔊 Çalıyor' : '🔔 Aktif';
+          statusEl.classList.remove('badge--muted');
+        }
+      }
+    });
+  }
 
   // Toggle: Abdest Reminder
   const abdestToggle = document.getElementById('toggle-abdest');
