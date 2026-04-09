@@ -42,12 +42,18 @@ class TodayHadithView(APIView):
         day_of_year = now().timetuple().tm_yday
         try:
             hadith = Hadith.objects.get(day_of_year=day_of_year)
+            return Response(HadithSerializer(hadith).data)
         except Hadith.DoesNotExist:
             count = Hadith.objects.count()
             if count > 0:
                 idx = (day_of_year % count)
                 hadith = Hadith.objects.all()[idx]
+                return Response(HadithSerializer(hadith).data)
             else:
-                return Response(status=404)
-        
-        return Response(HadithSerializer(hadith).data)
+                return Response({
+                    "id": 0,
+                    "text": "İlim talep etmek her Müslüman'a farzdır. Şüphesiz Allah, ilim peşinde koşanları sever.",
+                    "source": "Hz. Muhammed (s.a.a)",
+                    "reference": "Usul-u Kâfi, c.1, s.30",
+                    "day_of_year": day_of_year
+                })
