@@ -129,26 +129,50 @@
 }
 
 .qa-item {
-  padding: var(--space-lg);
+  padding: 0;
   border-radius: var(--radius-md);
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   transition: all var(--transition-base);
+  overflow: hidden;
 }
 
 .qa-item:hover {
   border-color: var(--border-accent);
 }
 
+.qa-item--hidden {
+  display: none;
+}
+
 .qa-item__question {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-sm);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
   font-size: var(--font-size-sm);
   line-height: 1.5;
+  padding: var(--space-lg);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition-fast);
+}
+
+.qa-item__question:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.qa-item__chevron {
+  font-size: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+  font-weight: 400;
+}
+
+.qa-item--expanded .qa-item__chevron {
+  color: var(--color-accent);
 }
 
 .qa-item__q-icon {
@@ -163,7 +187,15 @@
   font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
-  margin-top: 1px;
+}
+
+.qa-item__answer-wrap {
+  animation: qaSlideIn 0.25s ease;
+}
+
+@keyframes qaSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .qa-item__answer {
@@ -173,7 +205,9 @@
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   line-height: 1.6;
-  padding-left: 4px;
+  padding: 0 var(--space-lg) var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-md);
 }
 
 .qa-item__a-icon {
@@ -191,11 +225,19 @@
   margin-top: 1px;
 }
 
+.qa-item__meta {
+  padding: 0 var(--space-lg) var(--space-sm);
+}
+
 .qa-item__date {
   font-size: 11px;
   color: var(--text-muted);
   text-align: right;
-  margin-top: var(--space-sm);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Library */

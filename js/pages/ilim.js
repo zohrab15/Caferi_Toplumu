@@ -98,21 +98,30 @@ export async function renderIlimPage() {
             <h2 class="section-title">Son Cevaplanan Sorular</h2>
             <span class="badge badge--accent">${recentQA.length || 0} soru</span>
           </div>
-          <div class="qa-list">
-            ${recentQA.length > 0 ? recentQA.map(qa => `
-              <div class="qa-item">
-                <div class="qa-item__question">
+          <div class="qa-list" id="qa-list">
+            ${recentQA.length > 0 ? recentQA.map((qa, idx) => `
+              <div class="qa-item qa-item--collapsed ${idx >= 3 ? 'qa-item--hidden' : ''}" data-qa-idx="${idx}" id="qa-item-${idx}">
+                <div class="qa-item__question qa-toggle" data-qa-target="${idx}">
                   <span class="qa-item__q-icon">S</span>
-                  ${qa.question}
+                  <span style="flex:1">${qa.question}</span>
+                  <span class="qa-item__chevron">›</span>
                 </div>
-                <div class="qa-item__answer">
-                  <span class="qa-item__a-icon">C</span>
-                  ${qa.answer}
+                <div class="qa-item__answer-wrap" id="qa-answer-${idx}" style="display:none">
+                  <div class="qa-item__answer">
+                    <span class="qa-item__a-icon">C</span>
+                    ${qa.answer}
+                  </div>
+                  <div class="qa-item__meta">
+                    <span class="qa-item__date">${qa.date}</span>
+                  </div>
                 </div>
-                <div class="qa-item__date">${qa.date}</div>
               </div>
             `).join('') : '<p class="text-muted" style="font-size:13px;text-align:center;">Henüz cevaplanmış soru bulunmuyor.</p>'}
           </div>
+          ${recentQA.length > 3 ? `
+          <button class="btn btn--outline btn--full" id="qa-show-more" style="margin-top:12px;border-color:var(--color-primary);color:var(--color-primary);font-size:13px;">
+            ▼ Daha Fazla Göster (${recentQA.length - 3} soru daha)
+          </button>` : ''}
         </div>
 
         <!-- Digital Library -->
@@ -171,6 +180,37 @@ export async function renderIlimPage() {
         btn.disabled = false;
         btn.textContent = 'Soruyu Gönder';
       }
+    });
+
+    // Q&A Accordion: click question to toggle answer
+    container.querySelectorAll('.qa-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const idx = toggle.dataset.qaTarget;
+        const answerWrap = document.getElementById(`qa-answer-${idx}`);
+        const item = document.getElementById(`qa-item-${idx}`);
+        const chevron = toggle.querySelector('.qa-item__chevron');
+
+        if (answerWrap.style.display === 'none') {
+          answerWrap.style.display = 'block';
+          item.classList.remove('qa-item--collapsed');
+          item.classList.add('qa-item--expanded');
+          if (chevron) chevron.textContent = '⌄';
+        } else {
+          answerWrap.style.display = 'none';
+          item.classList.add('qa-item--collapsed');
+          item.classList.remove('qa-item--expanded');
+          if (chevron) chevron.textContent = '›';
+        }
+      });
+    });
+
+    // "Daha Fazla Göster" button
+    document.getElementById('qa-show-more')?.addEventListener('click', () => {
+      container.querySelectorAll('.qa-item--hidden').forEach(item => {
+        item.classList.remove('qa-item--hidden');
+        item.style.animation = 'fadeIn 0.3s ease';
+      });
+      document.getElementById('qa-show-more').remove();
     });
 
     // Book expansion
