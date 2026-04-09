@@ -1,7 +1,7 @@
 // Service Worker — Ehli-Beyt Ankara PWA
 // Offline cache + Push Notification support
 
-const CACHE_NAME = 'ehlibeyt-v4';
+const CACHE_NAME = 'ehlibeyt-v5';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -18,6 +18,7 @@ const STATIC_ASSETS = [
   '/js/app.js',
   '/js/api.js',
   '/js/praytimes.js',
+  '/js/prayerdata.js',
   '/js/pages/prayer.js',
   '/js/pages/community.js',
   '/js/pages/ilim.js',
