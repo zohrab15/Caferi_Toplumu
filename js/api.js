@@ -39,6 +39,12 @@ export async function apiFetch(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
+    
+    // Handle 204 No Content (DELETE success)
+    if (response.status === 204) {
+      return { success: true };
+    }
+
     const data = await response.json();
     
     // Auth token expiration logic
