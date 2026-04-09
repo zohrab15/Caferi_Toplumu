@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0D4F2B" />
+  <meta name="description" content="Ehli-Beyt Ankara — Ankara Caferi Toplumu Dijital Ekosistemi. Namaz vakitleri, duyurular, dini içerik, bağış ve ziyaret koordinasyonu." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Ehli-Beyt Ankara</title>
+
+  <link rel="manifest" href="/assets/manifest-B_ay-Vaz.json" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <!-- Stylesheets -->
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script type="module" crossorigin src="/assets/index-Dd-2bKrh.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-XONfbfM7.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header" id="app-header"></header>
+
+    <!-- Main content -->
+    <main class="page-container" id="page-content"></main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottom-nav"></nav>
+  </div>
+
+  <!-- PWA Install Banner -->
+  <div class="pwa-install-banner" id="pwa-install-banner" style="display:none">
+    <div class="pwa-install-banner__content">
+      <div class="pwa-install-banner__icon">🕌</div>
+      <div class="pwa-install-banner__text">
+        <strong>Ehli-Beyt Ankara</strong>
+        <span>Uygulamayı telefonunuza yükleyin — namaz vakitleri, ezan bildirimleri ve daha fazlası!</span>
+      </div>
+    </div>
+    <div class="pwa-install-banner__actions">
+      <button class="pwa-install-banner__btn pwa-install-banner__btn--install" id="pwa-install-btn">
+        📲 Yükle
+      </button>
+      <button class="pwa-install-banner__btn pwa-install-banner__btn--dismiss" id="pwa-dismiss-btn">
+        Sonra
+      </button>
+    </div>
+  </div>
+
+  <!-- iOS Install Guide (shown on iOS Safari) -->
+  <div class="pwa-ios-guide" id="pwa-ios-guide" style="display:none">
+    <div class="pwa-ios-guide__content">
+      <div class="pwa-ios-guide__icon">🕌</div>
+      <div class="pwa-ios-guide__text">
+        <strong>Uygulamayı yüklemek için:</strong><br>
+        <span>1. Safari'de <strong>Paylaş</strong> butonuna (⬆️) basın</span><br>
+        <span>2. <strong>"Ana Ekrana Ekle"</strong> seçin</span>
+      </div>
+      <button class="pwa-ios-guide__close" id="pwa-ios-close">✕</button>
+    </div>
+  </div>
+
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('[SW] Registered:', reg.scope))
+          .catch(err => console.warn('[SW] Registration failed:', err));
+      });
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      // Show install banner (unless user dismissed before)
+      if (localStorage.getItem('pwaInstallDismissed') !== 'true') {
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+          banner.style.display = 'flex';
+          banner.classList.add('pwa-install-banner--show');
+        }
+      }
+    });
+
+    // Install button click
+    document.getElementById('pwa-install-btn')?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      console.log('[PWA] Install result:', result.outcome);
+      deferredPrompt = null;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) {
+        banner.classList.remove('pwa-install-banner--show');
+        setTimeout(() => banner.style.display = 'none', 400);
+      }
+    });
+
+    // Dismiss button click
+    document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
+      localStorage.setItem('pwaInstallDismissed', 'true');
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) {
+        banner.classList.remove('pwa-install-banner--show');
+        setTimeout(() => banner.style.display = 'none', 400);
+      }
+    });
+
+    // Detect if already installed
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] App installed');
+      deferredPrompt = null;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.style.display = 'none';
+    });
+
+    // iOS Detection — show custom guide
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+    if (isIOS && !isStandalone && localStorage.getItem('pwaIOSDismissed') !== 'true') {
+      setTimeout(() => {
+        const guide = document.getElementById('pwa-ios-guide');
+        if (guide) {
+          guide.style.display = 'flex';
+          guide.classList.add('pwa-ios-guide--show');
+        }
+      }, 3000);
+    }
+    document.getElementById('pwa-ios-close')?.addEventListener('click', () => {
+      localStorage.setItem('pwaIOSDismissed', 'true');
+      const guide = document.getElementById('pwa-ios-guide');
+      if (guide) {
+        guide.classList.remove('pwa-ios-guide--show');
+        setTimeout(() => guide.style.display = 'none', 400);
+      }
+    });
+  </script>
+  <!-- Load app.js directly so Vite can build it -->
+</body>
+</html>

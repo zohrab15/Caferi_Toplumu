@@ -2,12 +2,12 @@
 import { apiFetch, isLoggedIn, showToast } from '../api.js';
 
 const books = [
-  { icon: '📖', title: 'Mefatihul-Cinan', author: 'Şeyh Abbas Kummi', lang: 'TR / AZ', desc: 'En kapsamlı dua ve ziyaretname mecmuası. Muharrem\'den Zilhicce\'ye kadar tüm ay ve gün dualarını içerir.' },
-  { icon: '📕', title: 'Nehcü\'l Belağa', author: 'Hz. Ali (a.s)', lang: 'TR', desc: 'Hz. Ali\'nin hutbeleri, mektupları ve hikmetli sözlerinden oluşan eşsiz eser.' },
-  { icon: '📗', title: 'Sahife-i Seccadiye', author: 'İmam Zeyn\'el-Abidin (a.s)', lang: 'TR / AZ', desc: '4. İmam\'ın 54 münacaatını içeren, "Âl-i Muhammed\'in Zeburu" olarak bilinen dua kitabı.' },
-  { icon: '📘', title: 'Usul-u Kâfi', author: 'Şeyh Kuleyni', lang: 'TR', desc: 'Şia hadis külliyatının en önemli dört kitabından biri. İman, akıl, ilim ve tevhid bölümleri.' },
-  { icon: '📙', title: 'Risale-i Ameliye', author: 'Büyük Merciler', lang: 'TR / AZ', desc: 'Günlük ibadet ve fıkhi meselelerde mükellefin amelî hükümleri.' },
-  { icon: '📓', title: 'Bihar-ul Envar', author: 'Allame Meclisi', lang: 'TR', desc: '110 ciltlik Şia hadis ansiklopedisi. Ehli Beyt\'in tüm rivayetlerini kapsar.' },
+  { icon: '📖', title: 'Mefatihul-Cinan', author: 'Şeyh Abbas Kummi', lang: 'TR / AZ', desc: 'En kapsamlı dua ve ziyaretname mecmuası. Muharrem\'den Zilhicce\'ye kadar tüm ay ve gün dualarını içerir.', link: 'https://www.caferilik.com/kutuphane' },
+  { icon: '📕', title: 'Nehcü\'l Belağa', author: 'Hz. Ali (a.s)', lang: 'TR', desc: 'Hz. Ali\'nin hutbeleri, mektupları ve hikmetli sözlerinden oluşan eşsiz eser.', link: 'https://ia800908.us.archive.org/3/items/NehclBelga-AbdLBakiGlpnarl/Nehcul_Belaga_Hz_Ali.pdf' },
+  { icon: '📗', title: 'Sahife-i Seccadiye', author: 'İmam Zeyn\'el-Abidin (a.s)', lang: 'TR / AZ', desc: '4. İmam\'ın 54 münacaatını içeren, "Âl-i Muhammed\'in Zeburu" olarak bilinen dua kitabı.', link: 'https://www.caferilik.com/kutuphane' },
+  { icon: '📘', title: 'Usul-u Kâfi', author: 'Şeyh Kuleyni', lang: 'TR', desc: 'Şia hadis külliyatının en önemli dört kitabından biri. İman, akıl, ilim ve tevhid bölümleri.', link: 'https://www.caferilik.com/kutuphane' },
+  { icon: '📙', title: 'Risale-i Ameliye', author: 'Büyük Merciler', lang: 'TR / AZ', desc: 'Günlük ibadet ve fıkhi meselelerde mükellefin amelî hükümleri.', link: 'https://tr.sistani.org/' },
+  { icon: '📓', title: 'Bihar-ul Envar', author: 'Allame Meclisi', lang: 'TR', desc: '110 ciltlik Şia hadis ansiklopedisi. Ehli Beyt\'in tüm rivayetlerini kapsar.', link: 'https://al-shia.org/' },
 ];
 
 let expandedBook = null;
@@ -133,8 +133,9 @@ export async function renderIlimPage() {
             <div class="library-detail" id="book-detail-${idx}" style="display:none">
               <p class="library-detail__desc">${b.desc}</p>
               <div class="library-detail__actions">
-                <button class="btn btn--outline btn--sm">📥 İndir (PDF)</button>
-                <button class="btn btn--outline btn--sm">📖 Online Oku</button>
+                <a href="${b.link}" target="_blank" class="btn btn--outline btn--sm" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                  📖 İnternetten Oku / İndir
+                </a>
               </div>
             </div>
           `).join('')}

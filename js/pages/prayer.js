@@ -3,7 +3,9 @@
 // Statik veri yoksa offline PrayTimes hesaplamasına geçer
 
 import { getPrayerTimes, getHijriDate } from '../praytimes.js';
-import { getStaticPrayerTimes, getStaticDataRange } from '../prayerdata.js';
+import { getStaticPrayerTimes, getStaticDataRange, STATIC_PRAYER_TIMES } from '../prayerdata.js';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
 
 // Ankara coordinates & timezone
 const ANKARA_LAT = 39.9334;
@@ -528,6 +530,10 @@ export async function renderPrayerPage() {
 
       selectedEzan = opt.dataset.ezan;
       localStorage.setItem('selectedEzan', selectedEzan);
+      
+      if (Capacitor.isNativePlatform()) {
+        scheduleNativeNotifications();
+      }
 
       container.querySelectorAll('.ezan-option').forEach(o => o.classList.remove('ezan-option--active'));
       opt.classList.add('ezan-option--active');
@@ -547,6 +553,10 @@ export async function renderPrayerPage() {
       if (ezanId !== selectedEzan) {
         selectedEzan = ezanId;
         localStorage.setItem('selectedEzan', selectedEzan);
+        
+        if (Capacitor.isNativePlatform()) {
+          scheduleNativeNotifications();
+        }
         container.querySelectorAll('.ezan-option').forEach(o => o.classList.remove('ezan-option--active'));
         const parentOption = btn.closest('.ezan-option');
         if (parentOption) parentOption.classList.add('ezan-option--active');
@@ -572,6 +582,10 @@ export async function renderPrayerPage() {
     ezanToggle.addEventListener('change', () => {
       ezanAutoPlay = ezanToggle.checked;
       localStorage.setItem('ezanAutoPlay', ezanAutoPlay ? 'true' : 'false');
+      
+      if (Capacitor.isNativePlatform()) {
+        scheduleNativeNotifications();
+      }
 
       // Status badge güncelle
       const statusEl = document.getElementById('ezan-status');
@@ -593,11 +607,113 @@ export async function renderPrayerPage() {
     abdestToggle.addEventListener('change', () => {
       abdestReminder = abdestToggle.checked;
       localStorage.setItem('abdestReminder', abdestReminder ? 'true' : 'false');
+      
+      if (Capacitor.isNativePlatform()) {
+        scheduleNativeNotifications();
+      }
     });
   }
 
   // Start countdown
   startCountdown(timings);
+  
+  if (Capacitor.isNativePlatform()) {
+    scheduleNativeNotifications();
+  }
+}
+
+
+
+export async function scheduleNativeNotifications() {
+  if (!Capacitor.isNativePlatform()) return;
+
+  try {
+    const hasPerm = await LocalNotifications.checkPermissions();
+    if (hasPerm.display !== 'granted') {
+      const p = await LocalNotifications.requestPermissions();
+      if (p.display !== 'granted') return;
+    }
+
+    // Cancel all current pending notifications
+    const pending = await LocalNotifications.getPending();
+    if (pending.notifications.length > 0) {
+      await LocalNotifications.cancel({ notifications: pending.notifications });
+    }
+
+    if (!ezanAutoPlay && !abdestReminder) return; // Nothing to schedule
+
+    const notifications = [];
+    const now = new Date();
+    let idCounter = 1;
+
+    // We use selectedEzan
+    const soundFile = selectedEzan === 'haci-ruslan' ? 'haci_ruslan.mp3' : 'rahim_muazzinzade.mp3';
+
+    // Ensure channel exists for Android
+    if (Capacitor.getPlatform() === 'android') {
+      await LocalNotifications.createChannel({
+        id: 'ezan-channel',
+        name: 'Ezan Bildirimleri',
+        description: 'Vakit girdiğinde ezan okur',
+        importance: 5,
+        visibility: 1,
+        sound: soundFile,
+        vibration: true
+      });
+    }
+
+    Object.entries(STATIC_PRAYER_TIMES).forEach(([dateStr, times]) => {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const dayDate = new Date(y, m - 1, d);
+      
+      // Skip scheduling past days (keep checking from today)
+      if (dayDate.getTime() < now.getTime() - 86400000) return;
+
+      ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].forEach(prayerKey => {
+         const time = times[prayerKey];
+         if (!time || time === '--:--') return;
+         const [hours, mins] = time.split(':').map(Number);
+         const scheduleDate = new Date(y, m - 1, d, hours, mins, 0);
+
+         // Add Ezan Notification
+         if (ezanAutoPlay && scheduleDate.getTime() > now.getTime()) {
+             const pInfo = PRAYER_NAMES.find(p => p.key === prayerKey);
+             notifications.push({
+               title: `${pInfo ? pInfo.icon + ' ' + pInfo.name : prayerKey} Vakti`,
+               body: `Otomatik ezan okunuyor`,
+               id: idCounter++,
+               schedule: { at: scheduleDate, allowWhileIdle: true },
+               sound: soundFile,
+               channelId: 'ezan-channel'
+             });
+         }
+
+         // Add Abdest Reminder
+         if (abdestReminder) {
+             const abdestDate = new Date(scheduleDate.getTime());
+             abdestDate.setMinutes(abdestDate.getMinutes() - 15);
+             if (abdestDate.getTime() > now.getTime()) {
+               const pInfo = PRAYER_NAMES.find(p => p.key === prayerKey);
+               notifications.push({
+                 title: `🚿 Abdest Vaktidir`,
+                 body: `${pInfo ? pInfo.icon + ' ' + pInfo.name : prayerKey} namazına 15 dakika kaldı`,
+                 id: idCounter++,
+                 schedule: { at: abdestDate, allowWhileIdle: true }
+               });
+             }
+         }
+      });
+    });
+
+    // Schedule (cap it at 400 to avoid OS limits)
+    if (notifications.length > 0) {
+      await LocalNotifications.schedule({ notifications: notifications.slice(0, 400) });
+      console.log(`[Native] Scheduled ${Math.min(notifications.length, 400)} background notifications.`);
+    }
+
+  } catch (err) {
+    console.error('Failed to schedule native notifications:', err);
+  }
 }
 
 // Cleanup on page leave
