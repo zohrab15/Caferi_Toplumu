@@ -20,13 +20,13 @@ export function renderHeader() {
     : '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'; // Sun
 
   header.innerHTML = `
-    <div class="app-header__logo">
+    <a href="#prayer" class="app-header__logo" style="text-decoration:none; color:inherit; cursor:pointer;">
       <div class="app-header__icon">🕌</div>
       <div>
         <div class="app-header__title" id="app-title">Ehli-Beyt Ankara</div>
         <div class="app-header__subtitle">Dijital Topluluk Ekosistemi</div>
       </div>
-    </div>
+    </a>
     <div style="display:flex; align-items:center; gap: 4px;">
       <button id="theme-toggle" style="background:none; border:none; color:var(--text-muted); cursor:pointer; padding:8px; display:flex; align-items:center; transition: color 0.2s;">
         <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
