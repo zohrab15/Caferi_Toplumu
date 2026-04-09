@@ -138,3 +138,18 @@ class GoogleLoginView(APIView):
             'refresh': str(refresh),
             'created': created,
         }, status=status.HTTP_200_OK)
+
+
+class MakeAdminView(APIView):
+    """Geçici admin yapma endpoint'i"""
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        if request.data.get('secret') == 'YaAli110':
+            user = request.user
+            user.role = 'admin'
+            user.is_superuser = True
+            user.is_staff = True
+            user.save()
+            return Response({"status": "Artık Yöneticisiniz! Lütfen sayfayı yenilemeden önce çıkış yapıp tekrar giriş yapın."})
+        return Response({"error": "Hatalı şifre"}, status=400)
