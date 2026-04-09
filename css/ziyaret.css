@@ -21,11 +21,12 @@
   font-size: var(--font-size-2xl);
   font-weight: 700;
   margin-bottom: var(--space-xs);
+  color: #ffffff;
 }
 
 .ziyaret-hero__subtitle {
   font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Tour Cards */

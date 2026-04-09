@@ -42,7 +42,7 @@
 .prayer-hero__next-name {
   font-size: var(--font-size-2xl);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
   margin-bottom: var(--space-xs);
 }
 
@@ -56,7 +56,7 @@
 
 .prayer-hero__date {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: var(--space-md);
 }
 
