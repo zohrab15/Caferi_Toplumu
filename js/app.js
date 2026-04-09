@@ -118,18 +118,15 @@ async function initWebPush() {
           userVisibleOnly: true,
           applicationServerKey
         });
-        await fetch('http://localhost:8000/api/auth/webpush/subscribe/', {
+        await apiFetch('/auth/webpush/subscribe/', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          },
-          body: JSON.stringify({
+          body: {
             status_type: 'subscribe',
             subscription: subscription,
             browser: navigator.userAgent.includes('Chrome') ? 'chrome' : 'other',
             user_agent: navigator.userAgent
-          })
+          },
+          requireAuth: true
         });
       }
     } catch (e) {
