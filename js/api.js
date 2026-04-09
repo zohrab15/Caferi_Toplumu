@@ -1,7 +1,7 @@
 // API Helper functionality for connecting frontend to Django Backend
 
 // Canlı sunucu adresi oluşturulduğunda buradaki production linkini değiştireceksin
-const PROD_API_URL = 'https://ehlibeyt-api.onrender.com';
+const PROD_API_URL = 'https://caferi-toplumu.onrender.com';
 const DEV_API_URL = 'http://localhost:8000';
 
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
