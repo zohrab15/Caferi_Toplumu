@@ -38,11 +38,8 @@ export function renderAuthPage() {
             <div style="flex:1; height:1px; background:var(--border-color);"></div>
           </div>
 
-          <!-- Google Sign-In Button -->
-          <button type="button" id="google-login-btn" class="btn btn--google btn--full" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px 16px; background:#fff; color:#3c4043; border:1px solid #dadce0; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            Google ile Giriş Yap
-          </button>
+          <!-- Google Sign-In Button Container -->
+          <div id="google-login-btn-container" style="display:flex; justify-content:center; width: 100%;"></div>
         </form>
 
         <!-- Register Form -->
@@ -95,11 +92,8 @@ export function renderAuthPage() {
             <div style="flex:1; height:1px; background:var(--border-color);"></div>
           </div>
 
-          <!-- Google Sign-In Button (Register) -->
-          <button type="button" id="google-register-btn" class="btn btn--google btn--full" style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px 16px; background:#fff; color:#3c4043; border:1px solid #dadce0; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-            Google ile Kayıt Ol
-          </button>
+          <!-- Google Sign-In Button Container -->
+          <div id="google-register-btn-container" style="display:flex; justify-content:center; width: 100%;"></div>
         </form>
 
       </div>
@@ -211,10 +205,9 @@ export function renderAuthPage() {
   // Make callback globally accessible for Google
   window._handleGoogleCredential = handleGoogleCredential;
 
-  // Initialize Google Sign-In with a hidden rendered button
+  // Initialize Google Sign-In with visible rendered buttons
   function initGoogleSignIn() {
     if (typeof google === 'undefined' || !google.accounts) {
-      // Google script hasn't loaded yet, retry after a short delay
       setTimeout(initGoogleSignIn, 500);
       return;
     }
@@ -223,66 +216,41 @@ export function renderAuthPage() {
       client_id: GOOGLE_CLIENT_ID,
       callback: handleGoogleCredential,
       auto_select: false,
-      cancel_on_tap_outside: true,
+      context: "signin",
     });
 
-    // Create a hidden container for Google's rendered button
-    let hiddenDiv = document.getElementById('g_id_signin_hidden');
-    if (!hiddenDiv) {
-      hiddenDiv = document.createElement('div');
-      hiddenDiv.id = 'g_id_signin_hidden';
-      hiddenDiv.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;';
-      document.body.appendChild(hiddenDiv);
-    }
+    const loginContainer = document.getElementById('google-login-btn-container');
+    const registerContainer = document.getElementById('google-register-btn-container');
 
-    google.accounts.id.renderButton(hiddenDiv, {
+    const buttonConfig = {
       type: 'standard',
+      theme: 'outline',
       size: 'large',
-      width: 300,
-    });
-  }
+      text: 'signin_with',
+      shape: 'rectangular',
+      logo_alignment: 'left',
+      width: loginContainer ? loginContainer.offsetWidth : 300
+    };
 
-  function triggerGoogleSignIn() {
-    if (typeof google === 'undefined' || !google.accounts) {
-      showToast('Google servisleri yükleniyor, lütfen tekrar deneyin.', 'error');
-      return;
+    if (loginContainer) {
+      google.accounts.id.renderButton(loginContainer, buttonConfig);
     }
-
-    // Try to click the hidden Google button
-    const hiddenDiv = document.getElementById('g_id_signin_hidden');
-    if (hiddenDiv) {
-      const googleBtn = hiddenDiv.querySelector('[role="button"]') 
-                     || hiddenDiv.querySelector('div[tabindex="0"]')
-                     || hiddenDiv.querySelector('iframe');
-      if (googleBtn) {
-        googleBtn.click();
-        return;
-      }
+    
+    if (registerContainer) {
+      google.accounts.id.renderButton(registerContainer, {
+        ...buttonConfig,
+        text: 'signup_with'
+      });
     }
-
-    // Fallback: use prompt
-    google.accounts.id.prompt((notification) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        // If prompt fails, show manual message
-        showToast('Google popup açılamadı. Popup engelleyiciyi kapatıp tekrar deneyin.', 'error');
-      }
-    });
+    
+    // Also display the One Tap prompt as a convenience
+    google.accounts.id.prompt();
   }
 
   initGoogleSignIn();
-
-  document.getElementById('google-login-btn').addEventListener('click', triggerGoogleSignIn);
-  document.getElementById('google-register-btn').addEventListener('click', triggerGoogleSignIn);
-
-  // Add hover effect for Google buttons
-  document.querySelectorAll('.btn--google').forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-      btn.style.background = '#f8f9fa';
-      btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.background = '#fff';
-      btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-    });
+  
+  // Re-render Google buttons when window resizes to keep them full width
+  window.addEventListener('resize', () => {
+    // optional optimization could go here
   });
 }
