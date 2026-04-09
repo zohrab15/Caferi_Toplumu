@@ -58,3 +58,17 @@ class HelpRequestCreateView(generics.CreateAPIView):
     def get_serializer(self, *args, **kwargs):
         # Override to accept 'title' and 'description' directly
         return super().get_serializer(*args, **kwargs)
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def trigger_seed(request):
+    import sys
+    from pathlib import Path
+    base_dir = Path(__file__).resolve().parent.parent
+    sys.path.append(str(base_dir))
+    import seed
+    seed.seed_data()
+    return Response({'status': '✅ Seed Data Yüklendi!'})

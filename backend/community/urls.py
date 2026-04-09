@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AnnouncementListView, HelpRequestListView, AnnouncementCreateView, HelpRequestCreateView, AnnouncementDeleteView
+from .views import AnnouncementListView, HelpRequestListView, AnnouncementCreateView, HelpRequestCreateView, AnnouncementDeleteView, trigger_seed
 
 urlpatterns = [
     path('announcements/', AnnouncementListView.as_view(), name='api-announcements'),
@@ -7,5 +7,6 @@ urlpatterns = [
     path('announcements/<int:pk>/delete/', AnnouncementDeleteView.as_view(), name='api-announcements-delete'),
     path('help-requests/', HelpRequestListView.as_view(), name='api-help-requests'),
     path('help-requests/create/', HelpRequestCreateView.as_view(), name='api-help-requests-create'),
+    path('seed/', trigger_seed, name='api-seed'),
 ]
 
