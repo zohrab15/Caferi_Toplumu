@@ -16,7 +16,7 @@
 
 .hadith-card__label {
   font-size: var(--font-size-xs);
-  color: var(--color-accent);
+  color: var(--text-accent);
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -55,7 +55,7 @@
 
 .hadith-card__source {
   font-size: var(--font-size-sm);
-  color: var(--color-accent);
+  color: var(--text-accent);
   font-weight: 600;
   margin-bottom: var(--space-xs);
 }
@@ -83,7 +83,7 @@
 
 .hadith-card__share:hover {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--text-accent);
   background: rgba(212, 168, 67, 0.05);
 }
 
@@ -172,7 +172,7 @@
 }
 
 .qa-item--expanded .qa-item__chevron {
-  color: var(--color-accent);
+  color: var(--text-accent);
 }
 
 .qa-item__q-icon {

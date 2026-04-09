@@ -81,7 +81,7 @@
 .live-player__placeholder:hover .live-player__play-icon {
   background: rgba(212, 168, 67, 0.2);
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--text-accent);
   transform: scale(1.1);
 }
 

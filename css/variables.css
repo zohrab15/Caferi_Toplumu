@@ -89,6 +89,7 @@
   --text-primary: #111827;
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
+  --text-accent: #a37a24; /* Darker gold for better contrast on white */
   
   --border-subtle: rgba(0, 0, 0, 0.08);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);

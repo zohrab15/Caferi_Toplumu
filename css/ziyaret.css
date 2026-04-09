@@ -90,7 +90,7 @@
 .tour-card__price {
   font-size: var(--font-size-lg);
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--text-accent);
 }
 
 .tour-card__seats {
@@ -173,7 +173,7 @@
 .ziyaret-content__arabic {
   font-family: var(--font-arabic);
   font-size: var(--font-size-xl);
-  color: var(--color-accent);
+  color: var(--text-accent);
   line-height: 2.2;
   direction: rtl;
   margin-bottom: 4px;
@@ -189,7 +189,7 @@
 .ziyaret-content__subtitle {
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--color-accent);
+  color: var(--text-accent);
   margin-bottom: var(--space-md);
 }
 
