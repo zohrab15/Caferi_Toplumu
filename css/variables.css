@@ -16,6 +16,7 @@
   --bg-card-hover: rgba(30, 38, 45, 0.92);
   --bg-glass: rgba(13, 79, 43, 0.12);
   --bg-surface: #12161c;
+  --bg-nav: rgba(10, 10, 15, 0.9);
 
   /* Text */
   --text-primary: #f0f0f5;
@@ -74,4 +75,25 @@
   --navbar-height: 72px;
   --header-height: 60px;
   --max-width: 480px;
+}
+
+/* Light Theme overrides */
+:root[data-theme="light"] {
+  --bg-base: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-card-hover: rgba(255, 255, 255, 1);
+  --bg-glass: rgba(13, 79, 43, 0.05);
+  --bg-surface: #ffffff;
+  --bg-nav: rgba(255, 255, 255, 0.9);
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(13, 79, 43, 0.15);
+  --shadow-gold-glow: 0 0 20px rgba(212, 168, 67, 0.15);
 }

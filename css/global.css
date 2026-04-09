@@ -68,7 +68,7 @@ input, textarea, select { font-family: inherit; }
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--space-lg);
-  background: rgba(10, 10, 15, 0.9);
+  background: var(--bg-nav);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
@@ -147,7 +147,7 @@ input, textarea, select { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: rgba(10, 10, 15, 0.95);
+  background: var(--bg-nav);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border-subtle);
