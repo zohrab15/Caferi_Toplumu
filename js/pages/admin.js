@@ -126,7 +126,7 @@ export async function renderAdminPage() {
     });
   }
 
-  function loadAnnounceForm() {
+  async function loadAnnounceForm() {
     const el = document.getElementById('tab-content-announce');
     el.innerHTML = `
       <form id="announcement-form" class="card card--dark" style="padding:20px;">
@@ -153,8 +153,86 @@ export async function renderAdminPage() {
         </div>
         <button type="submit" class="btn btn--primary btn--full" id="ann-submit-btn">📢 Duyuruyu Yayınla</button>
       </form>
+
+      <div class="section-header" style="margin-top:24px;">
+        <h3 class="section-title">Mevcut Duyurular</h3>
+      </div>
+      <div id="ann-list" style="margin-top:8px;">
+        <div class="card card--dark" style="padding:20px;text-align:center;color:var(--text-muted);">Yükleniyor...</div>
+      </div>
     `;
 
+    // Load existing announcements
+    async function renderAnnouncementList() {
+      const anns = await apiFetch('/community/announcements/');
+      const listEl = document.getElementById('ann-list');
+
+      if (anns._error || anns.length === 0) {
+        listEl.innerHTML = '<div class="card card--dark" style="padding:20px;text-align:center;color:var(--text-muted);font-size:14px;">Aktif duyuru yok.</div>';
+        document.getElementById('stat-announcements').textContent = '0';
+        return;
+      }
+
+      document.getElementById('stat-announcements').textContent = anns.length;
+
+      listEl.innerHTML = anns.map(a => `
+        <div class="card card--dark" style="padding:14px; margin-bottom:10px;" id="ann-card-${a.id}">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                <span style="font-size:10px; background:var(--bg-secondary); padding:2px 8px; border-radius:8px; color:${a.categoryColor};">${a.category}</span>
+                ${a.badge ? `<span class="badge badge--accent" style="font-size:9px;">${a.badge}</span>` : ''}
+                <span style="font-size:10px; color:var(--text-muted);">${a.date}</span>
+              </div>
+              <div style="font-weight:600; font-size:14px; margin-bottom:4px;">${a.title}</div>
+              <div style="font-size:12px; color:var(--text-secondary); line-height:1.4; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">${a.body}</div>
+            </div>
+            <button class="btn btn--danger btn--sm delete-ann-btn" data-id="${a.id}" style="padding:4px 10px; font-size:11px; margin-left:10px; flex-shrink:0;">🗑️ Sil</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Delete buttons
+      listEl.querySelectorAll('.delete-ann-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Bu duyuruyu kaldırmak istediğinize emin misiniz?')) return;
+
+          const id = btn.dataset.id;
+          btn.textContent = '...';
+          btn.disabled = true;
+
+          const res = await apiFetch('/community/announcements/' + id + '/delete/', {
+            method: 'DELETE',
+            requireAuth: true
+          });
+
+          if (!res._error) {
+            showToast('Duyuru başarıyla kaldırıldı', 'success');
+            const card = document.getElementById('ann-card-' + id);
+            if (card) {
+              card.style.transition = 'opacity 0.3s, transform 0.3s';
+              card.style.opacity = '0';
+              card.style.transform = 'translateX(20px)';
+              setTimeout(() => {
+                card.remove();
+                // Update count
+                const remaining = listEl.querySelectorAll('.card').length;
+                document.getElementById('stat-announcements').textContent = remaining;
+                if (remaining === 0) {
+                  listEl.innerHTML = '<div class="card card--dark" style="padding:20px;text-align:center;color:var(--text-muted);font-size:14px;">Aktif duyuru yok.</div>';
+                }
+              }, 300);
+            }
+          } else {
+            showToast('Duyuru silinemedi', 'error');
+            btn.textContent = '🗑️ Sil';
+            btn.disabled = false;
+          }
+        });
+      });
+    }
+
+    // New announcement form submit
     document.getElementById('announcement-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('ann-submit-btn');
@@ -177,16 +255,19 @@ export async function renderAdminPage() {
       if (!res._error) {
         showToast('Duyuru başarıyla yayınlandı!', 'success');
         e.target.reset();
-        const stat = document.getElementById('stat-announcements');
-        stat.textContent = parseInt(stat.textContent || 0) + 1;
         btn.disabled = false;
         btn.textContent = '📢 Duyuruyu Yayınla';
+        // Refresh list
+        await renderAnnouncementList();
       } else {
         showToast('Duyuru yayınlanırken bir hata oluştu.', 'error');
         btn.disabled = false;
         btn.textContent = '📢 Duyuruyu Yayınla';
       }
     });
+
+    // Initial load
+    await renderAnnouncementList();
   }
 
   async function loadTourRegistrations() {

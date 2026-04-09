@@ -14,6 +14,18 @@ class AnnouncementCreateView(generics.CreateAPIView):
     serializer_class = AnnouncementSerializer
     permission_classes = [permissions.IsAdminUser]
 
+class AnnouncementDeleteView(generics.DestroyAPIView):
+    """Admin only: duyuruyu sil (soft delete — is_active=False)"""
+    queryset = Announcement.objects.all()
+    serializer_class = AnnouncementSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def perform_destroy(self, instance):
+        # Soft delete: is_active = False
+        instance.is_active = False
+        instance.save()
+
+
 class HelpRequestListView(APIView):
     permission_classes = [permissions.AllowAny]
 
