@@ -31,7 +31,9 @@ export async function renderProfilePage() {
           <h2 style="font-size:20px; margin-bottom:4px;">${profile.first_name} ${profile.last_name}</h2>
           <p style="color:var(--text-muted); font-size:14px; margin-bottom:8px;">${profile.email}</p>
           <div style="display:flex; justify-content:center; gap:8px;">
-            <span class="badge ${profile.role === 'admin' || profile.role === 'imam' ? 'badge--accent' : 'badge--primary'}">${profile.role.toUpperCase()}</span>
+            <span class="badge ${profile.role === 'admin' || profile.role === 'imam' ? 'badge--accent' : 'badge--primary'}">
+              ${profile.role === 'admin' ? 'HADİM' : (profile.role === 'member' ? 'ÜYE' : 'İMAM')}
+            </span>
             ${profile.blood_group ? `<span class="badge badge--danger">🩸 ${profile.blood_group}</span>` : ''}
           </div>
           
