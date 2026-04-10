@@ -150,9 +150,21 @@ export async function renderAdminPage() {
 
         if (!res._error) {
           showToast('Cevabınız başarıyla yayınlandı!', 'success');
+          btn.textContent = 'Cevaplandı ✅';
+          btn.classList.add('btn--success');
           const card = document.getElementById(`q-card-${qid}`);
-          card.style.opacity = '0.5';
-          card.style.pointerEvents = 'none';
+          card.style.transition = 'all 0.5s ease';
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(-10px)';
+          setTimeout(() => {
+            card.remove();
+            // Eğer ekranda başka soru kartı kalmadıysa boş durum menüsünü göster
+            const el = document.getElementById('tab-content-questions');
+            if (el.querySelectorAll('.card').length === 0) {
+              el.innerHTML = '<div class="card card--dark" style="padding:24px; text-align:center; color:var(--text-muted); font-size:14px;">🎉 Tüm sorular cevaplanmış! Bekleyen soru yok.</div>';
+            }
+          }, 500);
+
           const label = document.getElementById('stat-questions-label');
           if (label) {
             const current = parseInt(label.textContent) || 0;
