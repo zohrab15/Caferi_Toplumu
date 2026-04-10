@@ -21,7 +21,9 @@ export function renderHeader() {
 
   header.innerHTML = `
     <a href="#prayer" class="app-header__logo" style="text-decoration:none; color:inherit; cursor:pointer;">
-      <div class="app-header__icon">🕌</div>
+      <div class="app-header__icon">
+        <img src="/assets/app-logo.png" alt="Logo" style="width:100%; height:100%; object-fit:contain; border-radius:4px;">
+      </div>
       <div>
         <div class="app-header__title" id="app-title">Ehli-Beyt Ankara</div>
         <div class="app-header__subtitle">Dijital Topluluk Ekosistemi</div>
