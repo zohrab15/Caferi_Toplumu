@@ -41,6 +41,19 @@ class AnswerQuestionView(APIView):
         q.answered_by = f"{request.user.first_name} {request.user.last_name}".strip() or request.user.email
         q.answered_at = now()
         q.save()
+
+        if q.user:
+            from webpush import send_user_notification
+            payload = {
+                "head": "💬 Sorunuz Cevaplandı",
+                "body": "Hocamız sorunuza yanıt verdi. Okumak için tıklayın.",
+                "url": "/#profile"
+            }
+            try:
+                send_user_notification(user=q.user, payload=payload, ttl=1000)
+            except Exception as e:
+                print(f"Push Error (ilim): {e}")
+
         return Response(QuestionSerializer(q).data)
 
 class TodayHadithView(APIView):
