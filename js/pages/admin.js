@@ -10,68 +10,102 @@ export async function renderAdminPage() {
 
   container.innerHTML = `
     <div class="page" style="padding-bottom:100px;">
-      <a href="#profile" style="display:inline-flex; align-items:center; gap:6px; color:var(--color-primary); text-decoration:none; font-size:14px; padding:12px 0;">
-        ← Profil
-      </a>
-      <div class="section-header" style="margin-top:8px;">
-        <h2 class="section-title">⚙️ Yönetim Paneli</h2>
+      <div id="admin-header-nav" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <a href="#profile" style="display:inline-flex; align-items:center; gap:6px; color:var(--color-primary); text-decoration:none; font-size:14px; padding:12px 0;">
+          ← Profil
+        </a>
+        <button id="btn-back-to-menu" class="btn btn--outline btn--sm" style="display:none; font-size:12px; padding:6px 12px;">
+          🏠 Ana Menüye Dön
+        </button>
       </div>
 
-      <!-- Stats -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:24px;">
-        <div class="card card--accent" style="padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:bold;" id="stat-questions">…</div>
-          <div style="font-size:11px; color:var(--text-secondary);">Bekleyen Soru</div>
+      <div class="section-header" style="margin-top:0; margin-bottom:20px;">
+        <h2 class="section-title" id="admin-title">⚙️ Yönetim Paneli</h2>
+      </div>
+
+      <!-- DASHBOARD GRID -->
+      <div id="admin-dashboard-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;">
+        <div class="card card--dark admin-module-card" data-module="questions" style="padding:20px; text-align:center; cursor:pointer; border:1px solid var(--border-color); transition:all 0.2s;">
+          <div style="font-size:32px; margin-bottom:8px;">🙋</div>
+          <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">Sorular</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="stat-questions-label">Yükleniyor...</div>
         </div>
-        <div class="card card--accent" style="padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:bold;" id="stat-tours">…</div>
-          <div style="font-size:11px; color:var(--text-secondary);">Tur Kaydı</div>
+        
+        <div class="card card--dark admin-module-card" data-module="announce" style="padding:20px; text-align:center; cursor:pointer; border:1px solid var(--border-color); transition:all 0.2s;">
+          <div style="font-size:32px; margin-bottom:8px;">📢</div>
+          <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">Duyuru Ekle</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="stat-announce-label">Yükleniyor...</div>
         </div>
-        <div class="card card--accent" style="padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:bold;" id="stat-campaigns">…</div>
-          <div style="font-size:11px; color:var(--text-secondary);">Aktif Kampanya</div>
+
+        <div class="card card--dark admin-module-card" data-module="tours" style="padding:20px; text-align:center; cursor:pointer; border:1px solid var(--border-color); transition:all 0.2s;">
+          <div style="font-size:32px; margin-bottom:8px;">👥</div>
+          <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">Tur Kayıtları</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="stat-tours-label">Yükleniyor...</div>
+        </div>
+
+        <div class="card card--dark admin-module-card" data-module="tourmanage" style="padding:20px; text-align:center; cursor:pointer; border:1px solid var(--border-color); transition:all 0.2s;">
+          <div style="font-size:32px; margin-bottom:8px;">🕋</div>
+          <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">Tur Yönetimi</div>
+          <div style="font-size:11px; color:var(--text-muted);">Turları düzenle</div>
+        </div>
+
+        <div class="card card--dark admin-module-card" data-module="campaigns" style="padding:20px; text-align:center; cursor:pointer; border:1px solid var(--border-color); transition:all 0.2s; grid-column: span 2;">
+          <div style="font-size:32px; margin-bottom:8px;">💎</div>
+          <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">Bağış Kampanyaları</div>
+          <div style="font-size:11px; color:var(--text-muted);" id="stat-campaigns-label">Yükleniyor...</div>
         </div>
       </div>
 
-      <!-- Tabs -->
-      <div style="display:flex; border-bottom:1px solid var(--border-color); margin-bottom:20px; overflow-x:auto;">
-        <button class="admin-tab admin-tab--active" data-tab="questions" style="flex:1; padding:10px; background:none; border:none; color:var(--text-primary); font-weight:bold; border-bottom:2px solid var(--color-primary); cursor:pointer; font-size:13px; white-space:nowrap;">🙋 Sorular</button>
-        <button class="admin-tab" data-tab="announce" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">📢 Duyuru Ekle</button>
-        <button class="admin-tab" data-tab="tours" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">👥 Tur Kayıt</button>
-        <button class="admin-tab" data-tab="tourmanage" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">🕋 Tur Yönetimi</button>
-        <button class="admin-tab" data-tab="campaigns" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">💎 Kampanyalar</button>
+      <!-- MODULE CONTENTS (Initially Hidden) -->
+      <div id="admin-content-area" style="display:none;">
+        <div id="tab-content-questions"></div>
+        <div id="tab-content-announce" style="display:none;"></div>
+        <div id="tab-content-tours" style="display:none;"></div>
+        <div id="tab-content-tourmanage" style="display:none;"></div>
+        <div id="tab-content-campaigns" style="display:none;"></div>
       </div>
-
-      <!-- Tab Content -->
-      <div id="tab-content-questions"></div>
-      <div id="tab-content-announce" style="display:none;"></div>
-      <div id="tab-content-tours" style="display:none;"></div>
-      <div id="tab-content-tourmanage" style="display:none;"></div>
-      <div id="tab-content-campaigns" style="display:none;"></div>
     </div>
   `;
 
-  // Tab switching
-  container.querySelectorAll('.admin-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      container.querySelectorAll('.admin-tab').forEach(t => {
-        t.classList.remove('admin-tab--active');
-        t.style.color = 'var(--text-muted)';
-        t.style.fontWeight = 'normal';
-        t.style.borderBottom = 'none';
-      });
-      tab.classList.add('admin-tab--active');
-      tab.style.color = 'var(--text-primary)';
-      tab.style.fontWeight = 'bold';
-      tab.style.borderBottom = '2px solid var(--color-primary)';
+  // Navigation Logic
+  const grid = document.getElementById('admin-dashboard-grid');
+  const contentArea = document.getElementById('admin-content-area');
+  const backBtn = document.getElementById('btn-back-to-menu');
+  const titleEl = document.getElementById('admin-title');
 
-      document.getElementById('tab-content-questions').style.display = tab.dataset.tab === 'questions' ? 'block' : 'none';
-      document.getElementById('tab-content-announce').style.display = tab.dataset.tab === 'announce' ? 'block' : 'none';
-      document.getElementById('tab-content-tours').style.display = tab.dataset.tab === 'tours' ? 'block' : 'none';
-      document.getElementById('tab-content-tourmanage').style.display = tab.dataset.tab === 'tourmanage' ? 'block' : 'none';
-      document.getElementById('tab-content-campaigns').style.display = tab.dataset.tab === 'campaigns' ? 'block' : 'none';
-    });
+  const showView = (module) => {
+    if (module === 'dashboard') {
+      grid.style.display = 'grid';
+      contentArea.style.display = 'none';
+      backBtn.style.display = 'none';
+      titleEl.textContent = '⚙️ Yönetim Paneli';
+    } else {
+      grid.style.display = 'none';
+      contentArea.style.display = 'block';
+      backBtn.style.display = 'block';
+      
+      const titles = {
+        'questions': '🙋 Gelen Sorular',
+        'announce': '📢 Duyuru Yayınla',
+        'tours': '👥 Tur Kayıtları',
+        'tourmanage': '🕋 Turları Yönet',
+        'campaigns': '💎 Kampayaları Yönet'
+      };
+      titleEl.textContent = titles[module] || 'Yönetim';
+
+      // Hide all contents, show active one
+      ['questions', 'announce', 'tours', 'tourmanage', 'campaigns'].forEach(m => {
+        document.getElementById(`tab-content-${m}`).style.display = m === module ? 'block' : 'none';
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  container.querySelectorAll('.admin-module-card').forEach(card => {
+    card.addEventListener('click', () => showView(card.dataset.module));
   });
+
+  backBtn.addEventListener('click', () => showView('dashboard'));
 
   // Load data
   await Promise.all([loadQuestions(), loadAnnounceForm(), loadTourRegistrations(), loadTourManagement(), loadCampaignManagement()]);
@@ -79,7 +113,8 @@ export async function renderAdminPage() {
   async function loadQuestions() {
     const questions = await apiFetch('/ilim/questions/unanswered/', { requireAuth: true });
     const el = document.getElementById('tab-content-questions');
-    document.getElementById('stat-questions').textContent = questions._error ? '?' : questions.length;
+    const label = document.getElementById('stat-questions-label');
+    if (label) label.textContent = questions._error ? 'Hata' : `${questions.length} bekleyen`;
 
     if (questions._error || questions.length === 0) {
       el.innerHTML = '<div class="card card--dark" style="padding:24px; text-align:center; color:var(--text-muted); font-size:14px;">🎉 Tüm sorular cevaplanmış! Bekleyen soru yok.</div>';
@@ -118,8 +153,11 @@ export async function renderAdminPage() {
           const card = document.getElementById(`q-card-${qid}`);
           card.style.opacity = '0.5';
           card.style.pointerEvents = 'none';
-          const stat = document.getElementById('stat-questions');
-          stat.textContent = Math.max(0, parseInt(stat.textContent) - 1);
+          const label = document.getElementById('stat-questions-label');
+          if (label) {
+            const current = parseInt(label.textContent) || 0;
+            label.textContent = `${Math.max(0, current - 1)} bekleyen`;
+          }
         } else {
           showToast('Cevap gönderilirken bir hata oluştu.', 'error');
           btn.disabled = false;
@@ -170,13 +208,8 @@ export async function renderAdminPage() {
       const anns = await apiFetch('/community/announcements/');
       const listEl = document.getElementById('ann-list');
 
-      if (anns._error || anns.length === 0) {
-        listEl.innerHTML = '<div class="card card--dark" style="padding:20px;text-align:center;color:var(--text-muted);font-size:14px;">Aktif duyuru yok.</div>';
-        document.getElementById('stat-announcements').textContent = '0';
-        return;
-      }
-
-      document.getElementById('stat-announcements').textContent = anns.length;
+      const statLabel = document.getElementById('stat-announce-label');
+      if (statLabel) statLabel.textContent = anns._error ? 'Hata' : `${anns.length} duyuru`;
 
       listEl.innerHTML = anns.map(a => `
         <div class="card card--dark" style="padding:14px; margin-bottom:10px;" id="ann-card-${a.id}">
@@ -276,7 +309,8 @@ export async function renderAdminPage() {
   async function loadTourRegistrations() {
     const regs = await apiFetch('/ziyaret/registrations/', { requireAuth: true });
     const el = document.getElementById('tab-content-tours');
-    document.getElementById('stat-tours').textContent = regs._error ? '?' : regs.length;
+    const label = document.getElementById('stat-tours-label');
+    if (label) label.textContent = regs._error ? 'Hata' : `${regs.length} yeni kayıt`;
 
     if (regs._error || regs.length === 0) {
       el.innerHTML = '<div class="card card--dark" style="padding:24px; text-align:center; color:var(--text-muted); font-size:14px;">Henüz tur kaydı bulunmuyor.</div>';
@@ -521,16 +555,16 @@ export async function renderAdminPage() {
     const renderCampaignList = async () => {
       const campaigns = await apiFetch('/bagis/admin/campaigns/', { requireAuth: true });
       const listEl = document.getElementById('cm-list');
-      const statEl = document.getElementById('stat-campaigns');
+      const statLabel = document.getElementById('stat-campaigns-label');
       
       if (campaigns._error) {
         listEl.innerHTML = '<div style="text-align:center; color:var(--text-danger); font-size:14px;">Kampanyalar yüklenirken hata oluştu.</div>';
-        statEl.textContent = '?';
+        if (statLabel) statLabel.textContent = 'Hata';
         return;
       }
       
       const activeCount = campaigns.filter(c => c.is_active).length;
-      statEl.textContent = activeCount;
+      if (statLabel) statLabel.textContent = `${activeCount} aktif kampanya`;
 
       if (campaigns.length === 0) {
         listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:14px;">Henüz kampanya bulunmuyor.</div>';
@@ -646,5 +680,6 @@ export async function renderAdminPage() {
 
   // Initial load calls
   const annsResult = await apiFetch('/community/announcements/');
-  document.getElementById('stat-announcements').textContent = annsResult._error ? '?' : annsResult.length;
+  const statAnn = document.getElementById('stat-announce-label');
+  if (statAnn) statAnn.textContent = annsResult._error ? 'Hata' : `${annsResult.length} duyuru`;
 }

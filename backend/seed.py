@@ -13,13 +13,13 @@ from ziyaret.models import Tour, TourRegistration
 from accounts.models import CustomUser
 
 def seed_data():
-    print("🌱 Seed məlumatları yüklənir...")
+    print("Seed verileri yukleniyor...")
 
     # ═══════════════════════════════════════════════════════════
     # 1) DUYURULAR (Announcements) — 8 adet, gerçekçi ve güncel
     # ═══════════════════════════════════════════════════════════
     Announcement.objects.all().delete()
-    print("  📢 Duyurular oluşturuluyor...")
+    print("  - Duyurular olusturuluyor...")
 
     announcements = [
         {
@@ -80,7 +80,7 @@ def seed_data():
     # 2) YARDIM TALEPLERİ (Help Requests) — 12 adet, gerçekçi
     # ═══════════════════════════════════════════════════════════
     HelpRequest.objects.all().delete()
-    print("  🤝 Yardım talepleri oluşturuluyor...")
+    print("  - Yardim talepleri olusturuluyor...")
 
     help_requests = [
         # Kan Bağışı
@@ -110,7 +110,7 @@ def seed_data():
     # 3) HADİSLER — 60 adet, yılın 60 günü için
     # ═══════════════════════════════════════════════════════════
     Hadith.objects.all().delete()
-    print("  📖 Hadisler oluşturuluyor...")
+    print("  - Hadisler olusturuluyor...")
 
     hadiths = [
         ("İlim öğrenmek her Müslüman erkek ve kadına farzdır.", "Hz. Muhammed (s.a.a)", "Bihar-ul Envar, c.1, s.177"),
@@ -182,7 +182,7 @@ def seed_data():
     # 4) İSTİFTA SORULARI (Questions) — 15 adet (10 cevaplanmış + 5 bekleyen)
     # ═══════════════════════════════════════════════════════════
     Question.objects.all().delete()
-    print("  🙋 Sorular oluşturuluyor...")
+    print("  - Sorular olusturuluyor...")
 
     answered_questions = [
         {
@@ -277,7 +277,7 @@ def seed_data():
     # ═══════════════════════════════════════════════════════════
     Campaign.objects.all().delete()
     Donation.objects.all().delete()
-    print("  💰 Kampanyalar oluşturuluyor...")
+    print("  - Kampanyalar olusturuluyor...")
 
     campaigns_data = [
         {
@@ -332,7 +332,7 @@ def seed_data():
     # ═══════════════════════════════════════════════════════════
     Tour.objects.all().delete()
     TourRegistration.objects.all().delete()
-    print("  🕋 Turlar oluşturuluyor...")
+    print("  - Turlar olusturuluyor...")
 
     tours_data = [
         {
@@ -415,15 +415,15 @@ def seed_data():
             )
 
     print("")
-    print("═" * 50)
-    print("✅ SEED TAMAMLANDI — Sistem canlı məlumatlarla dolduruldu!")
-    print("═" * 50)
-    print(f"  📢 {Announcement.objects.filter(is_active=True).count()} Duyuru")
-    print(f"  🤝 {HelpRequest.objects.filter(is_resolved=False).count()} Yardım Talebi")
-    print(f"  📖 {Hadith.objects.count()} Hadis")
-    print(f"  🙋 {Question.objects.filter(answer__isnull=False).count()} Cevaplanmış + {Question.objects.filter(answer__isnull=True).count()} Bekleyen Soru")
-    print(f"  💰 {Campaign.objects.filter(is_active=True).count()} Kampanya + {Donation.objects.count()} Bağış")
-    print(f"  🕋 {Tour.objects.filter(is_active=True).count()} Tur + {TourRegistration.objects.count()} Kayıt")
+    print("=" * 50)
+    print("SEED TAMAMLANDI - Sistem canli verilerle dolduruldu!")
+    print("=" * 50)
+    print(f"  - {Announcement.objects.filter(is_active=True).count()} Duyuru")
+    print(f"  - {HelpRequest.objects.filter(is_resolved=False).count()} Yardım Talebi")
+    print(f"  - {Hadith.objects.count()} Hadis")
+    print(f"  - {Question.objects.filter(answer__isnull=False).count()} Cevaplanmış + {Question.objects.filter(answer__isnull=True).count()} Bekleyen Soru")
+    print(f"  - {Campaign.objects.filter(is_active=True).count()} Kampanya + {Donation.objects.count()} Bağış")
+    print(f"  - {Tour.objects.filter(is_active=True).count()} Tur + {TourRegistration.objects.count()} Kayıt")
     print("")
 
 if __name__ == '__main__':
