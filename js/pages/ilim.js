@@ -42,6 +42,17 @@ export async function renderIlimPage() {
 
     container.innerHTML = `
       <div class="page">
+        <!-- Kur'an-ı Kerim Banner -->
+        <div class="card" style="background: linear-gradient(135deg, var(--color-primary), #0a3d21); color: white; padding: 24px; text-align: left; cursor: pointer; border: none; overflow: hidden; position: relative; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(13, 79, 43, 0.2);" onclick="window.location.hash='kuran'">
+          <div style="position: absolute; top: -10px; right: -20px; font-size: 100px; opacity: 0.1; line-height: 1; pointer-events: none;">📖</div>
+          <h2 style="margin:0 0 8px 0; font-size: 22px; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M21 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm-1 14H8V8h12v10Z"></path><path d="M3 8v14h2V8H3Z"></path></svg>
+            Kur'an-ı Kerim
+          </h2>
+          <p style="margin:0 0 16px 0; font-size: 14px; opacity: 0.9;">Arapça metin, meâl ve sesli tilavet (Mishary Alafasy)</p>
+          <button class="btn btn--light" style="width: auto; padding: 8px 24px; pointer-events: none; color: var(--color-primary); background: white;">Oku ve Dinle</button>
+        </div>
+
         <!-- Hadith of the Day -->
         <div class="hadith-card">
           <div class="hadith-card__label">📿 Günün Hadisi</div>

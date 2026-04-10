@@ -1,0 +1,267 @@
+/* Quran Module Styles */
+
+.kuran-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.kuran-header .back-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kuran-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+/* Surah Selector */
+.surah-selector {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 16px;
+  margin-bottom: 20px;
+  outline: none;
+  font-family: inherit;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+}
+
+.surah-selector:focus {
+  border-color: var(--color-primary);
+}
+
+/* Kuran Header Info */
+.kuran-info-card {
+  background: linear-gradient(135deg, var(--color-primary), #0a3d21);
+  border-radius: 16px;
+  padding: 24px;
+  color: white;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(13, 79, 43, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.kuran-info-card::before {
+  content: '❁';
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  font-size: 120px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.kuran-info-name {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-family: 'Amiri', serif; /* Optional arabic friendly font */
+}
+
+.kuran-info-translation {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.kuran-info-meta {
+  font-size: 12px;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Verses List */
+.verses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 120px; /* Space for the player */
+}
+
+/* Ayah Card */
+.ayah-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.ayah-card.playing {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(13, 79, 43, 0.15);
+  background-color: var(--bg-body);
+}
+
+.ayah-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ayah-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.ayah-card.playing .ayah-number {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.ayah-play-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.7;
+}
+
+.ayah-play-btn:hover {
+  opacity: 1;
+}
+
+.ayah-arabic {
+  font-size: 26px;
+  line-height: 2;
+  text-align: right;
+  direction: rtl;
+  color: var(--text-primary);
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.ayah-turkish {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Audio Player Bottom Bar */
+.kuran-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 20px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  z-index: 1000;
+  display: none; /* hidden initially */
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kuran-player.visible {
+  display: flex;
+}
+
+/* We need to adjust layout to not overlap bottom-nav if it's there. 
+   But the plan says we remove bottom-nav on this page or hide it. */
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.player-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.player-btn:hover {
+  background-color: var(--bg-body);
+}
+
+.player-btn.play-pause {
+  background-color: var(--color-primary);
+  color: white;
+  width: 48px;
+  height: 48px;
+}
+
+.player-btn.play-pause:hover {
+  background-color: #0c4324;
+}
+
+/* Loading State */
+.kuran-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.kuran-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
