@@ -4,15 +4,19 @@ from .models import Question, Hadith
 class QuestionSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
     question = serializers.CharField(source='text', read_only=True)
+    asked_by = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
-        fields = ('id', 'question', 'answer', 'date', 'text', 'is_anonymous', 'is_private')
+        fields = ('id', 'question', 'answer', 'date', 'text', 'is_anonymous', 'is_private', 'asked_by')
         extra_kwargs = {
-            'text': {'write_only': True},
-            'is_anonymous': {'write_only': True},
-            'is_private': {'write_only': True}
+            'text': {'write_only': True}
         }
+
+    def get_asked_by(self, obj):
+        if obj.is_anonymous or not obj.user:
+            return "Anonim"
+        return f"{obj.user.first_name} {obj.user.last_name}".strip() or obj.user.username
 
     def get_date(self, obj):
         if obj.answered_at:
@@ -23,9 +27,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user if request and request.user.is_authenticated else None
         
-        # Soru anonim değilse ve kullanıcı giriş yapmışsa bağla
-        is_anonymous = validated_data.get('is_anonymous', False)
-        if user and not is_anonymous:
+        if user:
             validated_data['user'] = user
 
         return super().create(validated_data)
