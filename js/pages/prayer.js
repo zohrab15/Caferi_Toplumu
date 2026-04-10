@@ -245,9 +245,8 @@ function checkPrayerNotification(timings) {
     // Ezan vakti — sadece imsak (Fajr), öğle (Dhuhr) ve akşam (Maghrib) vakitlerinde otomatik ezan okunur
     const isEzanTime = ['Fajr', 'Dhuhr', 'Maghrib'].includes(prayer.key);
     
-    // DEV_TEST = Sadece test amaçlı tetikleme
-    if (prayer.forceTest || (ezanAutoPlay && isEzanTime && time === currentKey && !ezanNotified[prayer.key])) {
-      if (!prayer.forceTest) ezanNotified[prayer.key] = true;
+    if (ezanAutoPlay && isEzanTime && time === currentKey && !ezanNotified[prayer.key]) {
+      ezanNotified[prayer.key] = true;
 
       // Show browser notification (Safe check)
       try {
@@ -511,18 +510,6 @@ export async function renderPrayerPage() {
               <span class="toggle__slider"></span>
             </label>
           </div>
-          
-          <!-- Test Button -->
-          <div class="ezan-setting-row" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
-            <div class="ezan-setting__info">
-              <span class="ezan-setting__icon">🧪</span>
-              <div>
-                <div class="ezan-setting__label">Ezanı Test Et</div>
-                <div class="ezan-setting__desc" style="font-size:11px;">Namaz vaktinin geldiğini simüle eder</div>
-              </div>
-            </div>
-            <button id="btn-test-ezan" class="btn btn--outline" style="padding: 4px 12px; font-size: 12px;">Test Et</button>
-          </div>
         </div>
       </div>
 
@@ -623,54 +610,6 @@ export async function renderPrayerPage() {
 
   // Start countdown
   startCountdown(timings);
-  
-  // Test Button Event
-  const testBtn = document.getElementById('btn-test-ezan');
-  if (testBtn) {
-    testBtn.addEventListener('click', async () => {
-      // Forcing a fake prayer event trigger
-      const fakePrayer = { key: 'Fajr', name: 'İmsak (Test)', icon: '🌙', forceTest: true };
-      
-      // Native notification for mobile
-      if (Capacitor.isNativePlatform()) {
-        try {
-          const soundFile = selectedEzan === 'haci-ruslan' ? 'haci_ruslan.mp3' : 'rahim_muazzinzade.mp3';
-          await LocalNotifications.schedule({
-            notifications: [{
-               title: `${fakePrayer.icon} ${fakePrayer.name} Vakti`,
-               body: `Bu bir test bildirimidir — Ezan okunuyor`,
-               id: 9999, // Test ID
-               schedule: { at: new Date(new Date().getTime() + 1000) }, // 1 saniye sonra
-               sound: soundFile,
-               channelId: 'ezan-channel'
-            }]
-          });
-          showAbdestToast({ name: 'Test Bildirimi Gönderildi', icon: '✅' });
-        } catch(e) {
-          console.error("Test bildirim hatasi:", e);
-        }
-      } else {
-        // Web notification (Safe check for iOS Safari)
-        try {
-          if ('Notification' in window) {
-            if (Notification.permission === 'granted') {
-              new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
-                body: `Bu bir test bildirimidir — Ezan okunuyor`,
-                icon: '/assets/favicon.svg',
-                tag: `ezan-test`,
-              });
-            } else if (Notification.permission !== 'denied') {
-              Notification.requestPermission();
-            }
-          }
-        } catch (err) {
-          console.warn("Web Notification desteklenmiyor veya engellendi:", err);
-        }
-        showAbdestToast({ name: 'Test (Ekranda)', icon: '✅' });
-      }
-      playEzan(selectedEzan);
-    });
-  }
   
   if (Capacitor.isNativePlatform()) {
     scheduleNativeNotifications();
