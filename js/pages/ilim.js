@@ -2,12 +2,12 @@
 import { apiFetch, isLoggedIn, showToast } from '../api.js';
 
 const books = [
-  { icon: '📖', title: 'Mefatihul-Cinan', author: 'Şeyh Abbas Kummi', lang: 'TR / AZ', desc: 'En kapsamlı dua ve ziyaretname mecmuası. Muharrem\'den Zilhicce\'ye kadar tüm ay ve gün dualarını içerir.', link: 'https://www.caferilik.com/kutuphane' },
-  { icon: '📕', title: 'Nehcü\'l Belağa', author: 'Hz. Ali (a.s)', lang: 'TR', desc: 'Hz. Ali\'nin hutbeleri, mektupları ve hikmetli sözlerinden oluşan eşsiz eser.', link: 'https://ia800908.us.archive.org/3/items/NehclBelga-AbdLBakiGlpnarl/Nehcul_Belaga_Hz_Ali.pdf' },
-  { icon: '📗', title: 'Sahife-i Seccadiye', author: 'İmam Zeyn\'el-Abidin (a.s)', lang: 'TR / AZ', desc: '4. İmam\'ın 54 münacaatını içeren, "Âl-i Muhammed\'in Zeburu" olarak bilinen dua kitabı.', link: 'https://www.caferilik.com/kutuphane' },
-  { icon: '📘', title: 'Usul-u Kâfi', author: 'Şeyh Kuleyni', lang: 'TR', desc: 'Şia hadis külliyatının en önemli dört kitabından biri. İman, akıl, ilim ve tevhid bölümleri.', link: 'https://www.caferilik.com/kutuphane' },
+  { icon: '📖', title: 'Mefatihul-Cinan', author: 'Şeyh Abbas Kummi', lang: 'TR / AZ', desc: 'En kapsamlı dua ve ziyaretname mecmuası. Muharrem\'den Zilhicce\'ye kadar tüm ay ve gün dualarını içerir.', link: 'https://www.caferilik.com/kutuphane/mefatihul-cinan/' },
+  { icon: '📕', title: 'Nehcü\'l Belağa', author: 'Hz. Ali (a.s)', lang: 'TR', desc: 'Hz. Ali\'nin hutbeleri, mektupları ve hikmetli sözlerinden oluşan eşsiz eser.', link: 'https://www.caferilik.com/pdf/Nehcul-Belaga-www.caferilik.com.pdf' },
+  { icon: '📗', title: 'Sahife-i Seccadiye', author: 'İmam Zeyn\'el-Abidin (a.s)', lang: 'TR / AZ', desc: '4. İmam\'ın 54 münacaatını içeren, "Âl-i Muhammed\'in Zeburu" olarak bilinen dua kitabı.', link: 'https://www.caferilik.com/pdf/Sahife-i%20Seccadiye-www.caferilik.com.pdf' },
+  { icon: '📘', title: 'Usul-u Kâfi', author: 'Şeyh Kuleyni', lang: 'TR', desc: 'Şia hadis külliyatının en önemli dört kitabından biri. İman, akıl, ilim ve tevhid bölümleri.', link: 'https://www.caferilik.com/pdf/Usul_u_kafi_caferilik_com.pdf' },
   { icon: '📙', title: 'Risale-i Ameliye', author: 'Büyük Merciler', lang: 'TR / AZ', desc: 'Günlük ibadet ve fıkhi meselelerde mükellefin amelî hükümleri.', link: 'https://www.sistani.org/turkish/' },
-  { icon: '📓', title: 'Bihar-ul Envar', author: 'Allame Meclisi', lang: 'TR', desc: '110 ciltlik Şia hadis ansiklopedisi. Ehli Beyt\'in tüm rivayetlerini kapsar.', link: 'https://al-shia.org/' },
+  { icon: '⚖️', title: 'El-Müracaat', author: 'S. A. Şerefuddin el-Musevi', lang: 'TR', desc: 'Doğruyu Arayanların Rehberi: Şia ve Sünni alimleri arasındaki ilmi ve tarihi mektuplaşmaları içeren başyapıt.', link: 'https://www.al-islam.org/printpdf/book/export/html/41984' },
 ];
 
 let expandedBook = null;
