@@ -39,11 +39,7 @@ export async function renderProfilePage() {
             <button onclick="window.location.hash='#admin'" class="btn btn--accent btn--sm" style="margin-top:16px; padding:8px 16px;">
               ⚙️ Yönetim Paneli
             </button>
-          ` : `
-            <button id="secret-admin-btn" class="btn btn--outline btn--sm" style="margin-top:16px; padding:8px 16px; opacity:0.5; border-style:dashed;">
-              👑 Beni Yönetici Yap (Geçici)
-            </button>
-          `}
+          ` : ''}
         </div>
 
         <!-- History Dashboard -->
@@ -108,25 +104,6 @@ export async function renderProfilePage() {
       window.location.hash = '#auth';
     });
 
-    const secretBtn = document.getElementById('secret-admin-btn');
-    if (secretBtn) {
-      secretBtn.addEventListener('click', async () => {
-        const res = await apiFetch('/auth/make-admin/', {
-          method: 'POST',
-          body: { secret: 'YaAli110' },
-          requireAuth: true
-        });
-        if (!res._error) {
-          showToast(res.status || 'Yönetici yapıldınız. Lütfen tekrar giriş yapın.', 'success');
-          setTimeout(() => {
-            logout();
-            window.location.hash = '#auth';
-          }, 2000);
-        } else {
-          showToast('Bir hata oluştu.', 'error');
-        }
-      });
-    }
 
   } catch (e) {
     container.innerHTML = `<div class="page text-center"><p class="text-danger">Bağlantı hatası: Profil yüklenemedi.</p>
