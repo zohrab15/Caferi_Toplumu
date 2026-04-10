@@ -85,17 +85,17 @@ export async function renderProfilePage() {
               <div class="profile-qa-item" style="border-bottom:1px solid var(--border-color); padding:10px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; cursor:pointer;" onclick="const d = document.getElementById('q-detail-${idx}'); d.style.display = d.style.display === 'none' ? 'block' : 'none';">
                   <div style="flex:1; padding-right:10px;">
-                    <div style="font-size:14px; margin-bottom:4px; ${q.is_answered ? 'font-weight:500;' : ''}">${q.question.length > 60 ? q.question.substring(0, 60) + '...' : q.question}</div>
+                    <div style="font-size:14px; margin-bottom:4px; ${q.answer ? 'font-weight:500;' : ''}">${(q.question || '').length > 60 ? (q.question || '').substring(0, 60) + '...' : (q.question || '')}</div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:11px; color:var(--text-muted);">${q.date}</span>
+                        <span style="font-size:11px; color:var(--text-muted);">${q.date || ''}</span>
                         ${q.is_private ? '<span style="font-size:10px; background:rgba(255,193,7,0.1); color:#ffc107; padding:1px 6px; border-radius:4px;">🔒 Özel</span>' : ''}
                     </div>
                   </div>
-                  <div style="font-size:14px;">${q.is_answered ? '✅' : '⏳'}</div>
+                  <div style="font-size:14px;">${q.answer ? '✅' : '⏳'}</div>
                 </div>
                 <div id="q-detail-${idx}" style="display:none; margin-top:12px; padding:12px; background:var(--bg-body); border-radius:8px; font-size:14px;">
-                  <div style="margin-bottom:12px;"><strong>Soru:</strong><br/>${q.question}</div>
-                  ${q.is_answered ? `
+                  <div style="margin-bottom:12px;"><strong>Soru:</strong><br/>${q.question || ''}</div>
+                  ${q.answer ? `
                     <div style="color:var(--color-primary); border-top:1px solid var(--border-color); padding-top:12px;">
                       <strong>Hoca Cevabı:</strong><br/>
                       ${q.answer}

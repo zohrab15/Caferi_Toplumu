@@ -41,17 +41,10 @@ class UserProfileSerializer(UserSerializer):
         ] if hasattr(obj, 'tourregistration_set') else []
 
     def get_questions(self, obj):
-        return [
-            {
-                "id": q.id,
-                "question": q.text,
-                "answer": q.answer,
-                "is_answered": bool(q.answer),
-                "is_private": q.is_private,
-                "date": q.created_at.strftime('%d.%m.%Y')
-            }
-            for q in obj.question_set.all()[:10]
-        ] if hasattr(obj, 'question_set') else []
+        from ilim.models import Question
+        from ilim.serializers import QuestionSerializer
+        questions = Question.objects.filter(user=obj)[:10]
+        return QuestionSerializer(questions, many=True).data
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
