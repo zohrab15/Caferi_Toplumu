@@ -5,6 +5,7 @@ class Question(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Soran Kullanıcı")
     text = models.TextField("Soru Metni")
     is_anonymous = models.BooleanField("Anonim mi?", default=False)
+    is_private = models.BooleanField("Gizli Soru (Sadece Profilimde Gözüksün)", default=False)
     
     answer = models.TextField("Cevap", blank=True, null=True)
     answered_by = models.CharField("Cevaplayan Hoca", max_length=100, blank=True, null=True)

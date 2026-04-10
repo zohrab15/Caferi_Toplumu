@@ -7,10 +7,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'question', 'answer', 'date', 'text', 'is_anonymous')
+        fields = ('id', 'question', 'answer', 'date', 'text', 'is_anonymous', 'is_private')
         extra_kwargs = {
             'text': {'write_only': True},
-            'is_anonymous': {'write_only': True}
+            'is_anonymous': {'write_only': True},
+            'is_private': {'write_only': True}
         }
 
     def get_date(self, obj):

@@ -10,7 +10,15 @@ class QuestionListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Question.objects.filter(answer__isnull=False).exclude(answer__exact='')
+        return Question.objects.filter(answer__isnull=False, is_private=False).exclude(answer__exact='')
+
+class MyQuestionsView(generics.ListAPIView):
+    """Kullanıcının sorduğu soruları (özel/genel) profil sayfası için getirir"""
+    serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user).order_by('-created_at')
 
 class UnansweredQuestionsView(generics.ListAPIView):
     """Admin only: cevaplanmamış sorular"""

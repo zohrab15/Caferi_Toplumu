@@ -42,8 +42,15 @@ class UserProfileSerializer(UserSerializer):
 
     def get_questions(self, obj):
         return [
-            {"question": q.text[:50]+"...", "is_answered": bool(q.answer), "date": q.created_at.strftime('%d.%m.%Y')}
-            for q in obj.question_set.all()[:5]
+            {
+                "id": q.id,
+                "question": q.text,
+                "answer": q.answer,
+                "is_answered": bool(q.answer),
+                "is_private": q.is_private,
+                "date": q.created_at.strftime('%d.%m.%Y')
+            }
+            for q in obj.question_set.all()[:10]
         ] if hasattr(obj, 'question_set') else []
 
 class RegisterSerializer(serializers.ModelSerializer):

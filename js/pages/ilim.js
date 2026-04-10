@@ -87,10 +87,14 @@ export async function renderIlimPage() {
               <label class="form-label">Sorunuz</label>
               <textarea class="form-textarea" id="question-input" placeholder="Dini sorunuzu buraya yazın..." rows="3" required></textarea>
             </div>
-            <div class="form-group" style="display:flex;align-items:center;gap:12px">
+            <div class="form-group" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
               <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text-secondary);cursor:pointer">
                 <input type="checkbox" id="anonymous-check" style="accent-color:var(--color-primary)" />
                 Anonim gönder
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text-secondary);cursor:pointer">
+                <input type="checkbox" id="private-check" style="accent-color:var(--color-primary)" />
+                Özel Soru (Sadece profilimde görünsün)
               </label>
             </div>
             <button type="submit" class="btn btn--primary btn--full" id="ask-submit-btn">
@@ -168,6 +172,7 @@ export async function renderIlimPage() {
       e.preventDefault();
       const input = document.getElementById('question-input');
       const isAnon = document.getElementById('anonymous-check').checked;
+      const isPriv = document.getElementById('private-check').checked;
       
       if (!input.value.trim()) return;
       
@@ -177,8 +182,8 @@ export async function renderIlimPage() {
 
       const res = await apiFetch('/ilim/questions/', {
         method: 'POST',
-        body: { text: input.value, is_anonymous: isAnon },
-        requireAuth: !isAnon // Token varsa yolla
+        body: { text: input.value, is_anonymous: isAnon, is_private: isPriv },
+        requireAuth: true // Her zaman token yolla, çünkü profil olmalı
       });
 
       if (!res._error) {
