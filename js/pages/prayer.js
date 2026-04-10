@@ -249,13 +249,17 @@ function checkPrayerNotification(timings) {
     if (prayer.forceTest || (ezanAutoPlay && isEzanTime && time === currentKey && !ezanNotified[prayer.key])) {
       if (!prayer.forceTest) ezanNotified[prayer.key] = true;
 
-      // Show browser notification
-      if (Notification.permission === 'granted') {
-        new Notification(`${prayer.icon} ${prayer.name} Vakti`, {
-          body: `${prayer.name} vakti geldi — Ezan okunuyor`,
-          icon: '/assets/favicon.svg',
-          tag: `ezan-${prayer.key}`,
-        });
+      // Show browser notification (Safe check)
+      try {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(`${prayer.icon} ${prayer.name} Vakti`, {
+            body: `${prayer.name} vakti geldi — Ezan okunuyor`,
+            icon: '/assets/favicon.svg',
+            tag: `ezan-${prayer.key}`,
+          });
+        }
+      } catch (err) {
+        console.warn("Background notification failed", err);
       }
 
       // Auto-play ezan
@@ -646,17 +650,23 @@ export async function renderPrayerPage() {
           console.error("Test bildirim hatasi:", e);
         }
       } else {
-        // Web notification
-        if (Notification.permission === 'granted') {
-          new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
-            body: `Bu bir test bildirimidir — Ezan okunuyor`,
-            icon: '/assets/favicon.svg',
-            tag: `ezan-test`,
-          });
-        } else if (Notification.permission !== 'denied') {
-          Notification.requestPermission();
+        // Web notification (Safe check for iOS Safari)
+        try {
+          if ('Notification' in window) {
+            if (Notification.permission === 'granted') {
+              new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
+                body: `Bu bir test bildirimidir — Ezan okunuyor`,
+                icon: '/assets/favicon.svg',
+                tag: `ezan-test`,
+              });
+            } else if (Notification.permission !== 'denied') {
+              Notification.requestPermission();
+            }
+          }
+        } catch (err) {
+          console.warn("Web Notification desteklenmiyor veya engellendi:", err);
         }
-        showAbdestToast({ name: 'Test (Web)', icon: '✅' });
+        showAbdestToast({ name: 'Test (Ekranda)', icon: '✅' });
       }
       playEzan(selectedEzan);
     });
