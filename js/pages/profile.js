@@ -1,4 +1,5 @@
 import { apiFetch, logout, showToast } from '../api.js';
+import { initWebPush } from '../app.js';
 
 export async function renderProfilePage() {
   const container = document.getElementById('page-content');
@@ -42,6 +43,14 @@ export async function renderProfilePage() {
               ⚙️ Yönetim Paneli
             </button>
           ` : ''}
+
+          <!-- Notification Permission Button -->
+          <div id="push-perm-container" style="margin-top:16px; display:none;">
+            <button id="btn-enable-push" class="btn btn--outline btn--sm" style="padding:6px 14px; font-size:12px; color:var(--color-primary); border-color:var(--color-primary);">
+              🔔 Bildirimleri Aç
+            </button>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Sorularınıza cevap geldiğinde anında haberiniz olsun</div>
+          </div>
         </div>
 
         <!-- History Dashboard -->
@@ -118,6 +127,23 @@ export async function renderProfilePage() {
       logout();
       showToast('Güle güle! Tekrar görüşmek üzere.', 'info');
       window.location.hash = '#auth';
+    });
+
+    // Check notification status and show button if needed
+    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      const pc = document.getElementById('push-perm-container');
+      if (pc) pc.style.display = 'block';
+      
+      document.getElementById('btn-enable-push')?.addEventListener('click', () => {
+        initWebPush(true);
+      });
+    }
+
+    // Hide button if subscribed event fires
+    window.addEventListener('pushSubscribed', () => {
+      const pc = document.getElementById('push-perm-container');
+      if (pc) pc.style.display = 'none';
+      showToast('Bildirimler başarıyla açıldı!', 'success');
     });
 
 

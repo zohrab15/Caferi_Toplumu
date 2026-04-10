@@ -113,27 +113,45 @@ function init() {
 }
 
 // WebPush init
-async function initWebPush() {
+export async function initWebPush(userInitiated = false) {
   if ('serviceWorker' in navigator && 'PushManager' in window && isLoggedIn()) {
     try {
-      const swRegistration = await navigator.serviceWorker.ready;
-      const permission = await Notification.requestPermission();
+      let permission = Notification.permission;
+      
+      // Sesi olarak veya sayfa yüklendiğinde otomatik sorulmasını engelle
+      if (permission === 'default' && userInitiated) {
+        permission = await Notification.requestPermission();
+      }
+
       if (permission === 'granted') {
+        const swRegistration = await navigator.serviceWorker.ready;
         const applicationServerKey = urlB64ToUint8Array('BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuB-3qOX7j30CG3EMGWpncwYkU');
         const subscription = await swRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey
         });
-        await apiFetch('/auth/webpush/subscribe/', {
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+            ? 'http://localhost:8000/api' : 'https://caferi-toplumu.onrender.com/api';
+        
+        await fetch(`${API_BASE}/auth/webpush/subscribe/`, {
           method: 'POST',
-          body: {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({
             status_type: 'subscribe',
             subscription: subscription,
             browser: navigator.userAgent.includes('Chrome') ? 'chrome' : 'other',
             user_agent: navigator.userAgent
-          },
-          requireAuth: true
+          })
         });
+        
+        if (userInitiated) {
+          // Toast mesajı göstermek isterseniz burada UI feedback verilebilir
+          const ev = new CustomEvent('pushSubscribed');
+          window.dispatchEvent(ev);
+        }
       }
     } catch (e) {
       console.error('Push registration failed:', e);
