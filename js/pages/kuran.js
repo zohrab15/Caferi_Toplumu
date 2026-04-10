@@ -132,7 +132,7 @@ export async function renderKuranPage() {
 
   } catch (err) {
     console.error('Kuran loading error', err);
-    container.innerHTML = \`<div class="page text-center"><p class="text-danger">Kur'an verileri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.</p></div>\`;
+    container.innerHTML = `<div class="page text-center"><p class="text-danger">Kur'an verileri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.</p></div>`;
   }
 
   async function loadSurah(number) {
@@ -146,7 +146,7 @@ export async function renderKuranPage() {
 
     try {
       // Fetch: Arabic Text (quran-uthmani), Turkish (tr.diyanet), Audio (ar.alafasy)
-      const res = await fetch(\`https://api.alquran.cloud/v1/surah/\${number}/editions/quran-uthmani,tr.diyanet,ar.alafasy\`);
+      const res = await fetch(`https://api.alquran.cloud/v1/surah/${number}/editions/quran-uthmani,tr.diyanet,ar.alafasy`);
       const data = await res.json();
       
       const arEdition = data.data[0];
@@ -171,18 +171,18 @@ export async function renderKuranPage() {
       }));
 
       // Render verses
-      listEl.innerHTML = currentVerses.map((ayah, idx) => \`
-        <div class="ayah-card" id="ayah-card-\${idx}">
+      listEl.innerHTML = currentVerses.map((ayah, idx) => `
+        <div class="ayah-card" id="ayah-card-${idx}">
           <div class="ayah-header">
-            <div class="ayah-number">\${ayah.numberInSurah}</div>
-            <button class="ayah-play-btn" data-idx="\${idx}">
+            <div class="ayah-number">${ayah.numberInSurah}</div>
+            <button class="ayah-play-btn" data-idx="${idx}">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
             </button>
           </div>
-          <div class="ayah-arabic">\${ayah.textAr}</div>
-          <div class="ayah-turkish">\${ayah.textTr}</div>
+          <div class="ayah-arabic">${ayah.textAr}</div>
+          <div class="ayah-turkish">${ayah.textTr}</div>
         </div>
-      \`).join('');
+      `).join('');
 
       // Bind individual play buttons
       document.querySelectorAll('.ayah-play-btn').forEach(btn => {
@@ -193,7 +193,7 @@ export async function renderKuranPage() {
       });
 
     } catch (e) {
-      listEl.innerHTML = \`<p class="text-danger" style="text-align:center">Ayetler yüklenemedi.</p>\`;
+      listEl.innerHTML = `<p class="text-danger" style="text-align:center">Ayetler yüklenemedi.</p>`;
     }
   }
 
@@ -206,10 +206,10 @@ export async function renderKuranPage() {
     audioEl.play();
 
     document.getElementById('kuran-player').classList.add('visible');
-    document.getElementById('player-ayah-number').textContent = \`Ayet \${ayah.numberInSurah}\`;
+    document.getElementById('player-ayah-number').textContent = `Ayet ${ayah.numberInSurah}`;
 
     // Scroll slightly so the ayah is clearly visible
-    const card = document.getElementById(\`ayah-card-\${idx}\`);
+    const card = document.getElementById(`ayah-card-${idx}`);
     if (card) {
       const yOffset = -80; // account for header
       const y = card.getBoundingClientRect().top + window.scrollY + yOffset;
@@ -232,7 +232,7 @@ export async function renderKuranPage() {
   function highlightAyahCard(idx) {
     document.querySelectorAll('.ayah-card').forEach(c => c.classList.remove('playing'));
     if (idx !== -1) {
-      const activeCard = document.getElementById(\`ayah-card-\${idx}\`);
+      const activeCard = document.getElementById(`ayah-card-${idx}`);
       if (activeCard && isPlaying) {
         activeCard.classList.add('playing');
       }
