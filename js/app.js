@@ -192,13 +192,13 @@ function urlB64ToUint8Array(base64String) {
 // Re-render header when auth state changes
 window.addEventListener('authChange', () => {
   renderHeader();
-  initWebPush();
+  // initWebPush(); // Legv edildi
 });
 
 // Start app when DOM ready or already loaded
 function startApp() {
   init();
-  setTimeout(initWebPush, 3000);
+  // setTimeout(initWebPush, 3000); // Legv edildi
 }
 
 if (document.readyState === 'loading') {

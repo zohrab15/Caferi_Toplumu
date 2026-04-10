@@ -135,11 +135,13 @@ export async function renderProfilePage() {
       const btn = document.getElementById('btn-enable-push');
       
       if (pc && btn) {
-        if (Notification.permission === 'granted') {
+        if (Notification.permission === 'default') {
            pc.style.display = 'block';
-           btn.innerHTML = '🔄 Bildirim Bağlantısını Yenile';
-        } else if (Notification.permission !== 'denied') {
-           pc.style.display = 'block';
+        } else if (Notification.permission === 'denied') {
+           pc.style.display = 'none';
+        } else {
+           // 'granted' case - hide the button as per "yenile legv et" request
+           pc.style.display = 'none';
         }
       }
       

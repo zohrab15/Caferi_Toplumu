@@ -641,7 +641,8 @@ export async function scheduleNativeNotifications() {
     let idCounter = 1;
 
     // We use selectedEzan
-    const soundFile = selectedEzan === 'haci-ruslan' ? 'haci_ruslan.mp3' : 'rahim_muazzinzade.mp3';
+    const ezanObj = EZAN_LIST.find(e => e.id === selectedEzan) || EZAN_LIST[0];
+    const soundFile = ezanObj.file.split('/').pop(); // "Haci Ruslan.mp3" or "Rahim Muazzinzade.mp3"
 
     // Ensure channel exists for Android
     if (Capacitor.getPlatform() === 'android') {
