@@ -31,6 +31,7 @@ const STATIC_ASSETS = [
   '/js/components/header.js',
   '/js/components/navbar.js',
   '/js/components/icons.js',
+  '/assets/app-logo.png',
 ];
 
 // Install — cache all static assets
