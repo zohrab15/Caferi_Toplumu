@@ -28,8 +28,8 @@ export async function renderAdminPage() {
           <div style="font-size:11px; color:var(--text-secondary);">Tur Kaydı</div>
         </div>
         <div class="card card--accent" style="padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:bold;" id="stat-announcements">…</div>
-          <div style="font-size:11px; color:var(--text-secondary);">Duyuru</div>
+          <div style="font-size:22px; font-weight:bold;" id="stat-campaigns">…</div>
+          <div style="font-size:11px; color:var(--text-secondary);">Aktif Kampanya</div>
         </div>
       </div>
 
@@ -39,6 +39,7 @@ export async function renderAdminPage() {
         <button class="admin-tab" data-tab="announce" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">📢 Duyuru Ekle</button>
         <button class="admin-tab" data-tab="tours" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">👥 Tur Kayıt</button>
         <button class="admin-tab" data-tab="tourmanage" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">🕋 Tur Yönetimi</button>
+        <button class="admin-tab" data-tab="campaigns" style="flex:1; padding:10px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px; white-space:nowrap;">💎 Kampanyalar</button>
       </div>
 
       <!-- Tab Content -->
@@ -46,6 +47,7 @@ export async function renderAdminPage() {
       <div id="tab-content-announce" style="display:none;"></div>
       <div id="tab-content-tours" style="display:none;"></div>
       <div id="tab-content-tourmanage" style="display:none;"></div>
+      <div id="tab-content-campaigns" style="display:none;"></div>
     </div>
   `;
 
@@ -67,11 +69,12 @@ export async function renderAdminPage() {
       document.getElementById('tab-content-announce').style.display = tab.dataset.tab === 'announce' ? 'block' : 'none';
       document.getElementById('tab-content-tours').style.display = tab.dataset.tab === 'tours' ? 'block' : 'none';
       document.getElementById('tab-content-tourmanage').style.display = tab.dataset.tab === 'tourmanage' ? 'block' : 'none';
+      document.getElementById('tab-content-campaigns').style.display = tab.dataset.tab === 'campaigns' ? 'block' : 'none';
     });
   });
 
   // Load data
-  await Promise.all([loadQuestions(), loadAnnounceForm(), loadTourRegistrations(), loadTourManagement()]);
+  await Promise.all([loadQuestions(), loadAnnounceForm(), loadTourRegistrations(), loadTourManagement(), loadCampaignManagement()]);
 
   async function loadQuestions() {
     const questions = await apiFetch('/ilim/questions/unanswered/', { requireAuth: true });
@@ -469,7 +472,179 @@ export async function renderAdminPage() {
     await renderTourList();
   }
 
-  // Load announcement count
-  const anns = await apiFetch('/community/announcements/');
-  document.getElementById('stat-announcements').textContent = anns._error ? '?' : anns.length;
+  async function loadCampaignManagement() {
+    const el = document.getElementById('tab-content-campaigns');
+    
+    el.innerHTML = `
+      <form id="campaign-manage-form" class="card card--dark" style="padding:20px; margin-bottom:20px;">
+        <h3 id="cm-form-title" style="margin-top:0; margin-bottom:16px;">Yeni Kampanya Ekle</h3>
+        <input type="hidden" id="cm-id" value="">
+        <div class="form-group">
+          <label class="form-label">Kampanya Başlığı</label>
+          <input type="text" id="cm-title" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Açıklama</label>
+          <textarea id="cm-desc" class="form-textarea" rows="3" required></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label class="form-label">Hedef Miktar (₺)</label>
+            <input type="number" id="cm-target" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Toplanan Miktar (₺)</label>
+            <input type="number" id="cm-collected" class="form-input" value="0" required>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label class="form-label">İkon (Emoji)</label>
+            <input type="text" id="cm-icon" class="form-input" placeholder="Örn: 🕌" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Durum</label>
+            <select id="cm-active" class="form-select">
+              <option value="true">Aktif</option>
+              <option value="false">Taslak / Kapalı</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="submit" class="btn btn--primary btn--full" id="cm-submit-btn" style="flex:2;">Kampanyayı Ekle</button>
+          <button type="button" class="btn btn--danger" id="cm-cancel-btn" style="display:none; flex:1;">İptal</button>
+        </div>
+      </form>
+      <div id="cm-list"></div>
+    `;
+
+    const renderCampaignList = async () => {
+      const campaigns = await apiFetch('/bagis/admin/campaigns/', { requireAuth: true });
+      const listEl = document.getElementById('cm-list');
+      const statEl = document.getElementById('stat-campaigns');
+      
+      if (campaigns._error) {
+        listEl.innerHTML = '<div style="text-align:center; color:var(--text-danger); font-size:14px;">Kampanyalar yüklenirken hata oluştu.</div>';
+        statEl.textContent = '?';
+        return;
+      }
+      
+      const activeCount = campaigns.filter(c => c.is_active).length;
+      statEl.textContent = activeCount;
+
+      if (campaigns.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:14px;">Henüz kampanya bulunmuyor.</div>';
+        return;
+      }
+      
+      listEl.innerHTML = campaigns.map(c => `
+        <div class="card card--dark" style="padding:14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:18px;">${c.icon}</span>
+              <div style="font-weight:bold; font-size:14px;">${c.title}</div>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+              ${parseFloat(c.collected_amount).toLocaleString('tr-TR')} / ${parseFloat(c.target_amount).toLocaleString('tr-TR')} ₺
+              <span style="margin-left:8px; color:${c.is_active ? 'var(--color-primary)' : 'var(--text-danger)'}; font-size:10px;">
+                ● ${c.is_active ? 'Aktif' : 'Kapalı'}
+              </span>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn--primary btn--sm edit-campaign-btn" data-campaign='${JSON.stringify(c).replace(/'/g, "&apos;")}' style="padding:4px 8px; font-size:11px;">Düzenle</button>
+            <button class="btn btn--danger btn--sm delete-campaign-btn" data-id="${c.id}" style="padding:4px 8px; font-size:11px;">Sil</button>
+          </div>
+        </div>
+      `).join('');
+
+      listEl.querySelectorAll('.delete-campaign-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Bu kampanyayı silmek istediğinize emin misiniz?')) return;
+          const id = btn.dataset.id;
+          btn.textContent = '...';
+          btn.disabled = true;
+          const res = await apiFetch('/bagis/admin/campaigns/' + id + '/', { method: 'DELETE', requireAuth: true });
+          if (!res._error) {
+            showToast('Kampanya silindi', 'success');
+            renderCampaignList();
+          } else {
+            showToast('Kampanya silinemedi', 'error');
+            btn.textContent = 'Sil';
+            btn.disabled = false;
+          }
+        });
+      });
+
+      listEl.querySelectorAll('.edit-campaign-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const c = JSON.parse(btn.dataset.campaign);
+          document.getElementById('cm-id').value = c.id;
+          document.getElementById('cm-title').value = c.title;
+          document.getElementById('cm-desc').value = c.description;
+          document.getElementById('cm-target').value = parseInt(c.target_amount);
+          document.getElementById('cm-collected').value = parseInt(c.collected_amount);
+          document.getElementById('cm-icon').value = c.icon;
+          document.getElementById('cm-active').value = c.is_active.toString();
+          
+          document.getElementById('cm-form-title').textContent = 'Kampanyayı Düzenle';
+          document.getElementById('cm-submit-btn').textContent = 'Güncelle';
+          document.getElementById('cm-cancel-btn').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    };
+
+    document.getElementById('cm-cancel-btn').addEventListener('click', () => {
+      document.getElementById('campaign-manage-form').reset();
+      document.getElementById('cm-id').value = '';
+      document.getElementById('cm-form-title').textContent = 'Yeni Kampanya Ekle';
+      document.getElementById('cm-submit-btn').textContent = 'Kampanyayı Ekle';
+      document.getElementById('cm-cancel-btn').style.display = 'none';
+    });
+
+    document.getElementById('campaign-manage-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('cm-submit-btn');
+      btn.disabled = true;
+
+      const cid = document.getElementById('cm-id').value;
+      const method = cid ? 'PATCH' : 'POST';
+      const endpoint = cid ? '/bagis/admin/campaigns/' + cid + '/' : '/bagis/admin/campaigns/';
+      
+      btn.textContent = cid ? 'Güncelleniyor...' : 'Ekleniyor...';
+
+      const payload = {
+        title: document.getElementById('cm-title').value,
+        description: document.getElementById('cm-desc').value,
+        target_amount: parseFloat(document.getElementById('cm-target').value),
+        collected_amount: parseFloat(document.getElementById('cm-collected').value),
+        icon: document.getElementById('cm-icon').value,
+        is_active: document.getElementById('cm-active').value === 'true'
+      };
+
+      const res = await apiFetch(endpoint, {
+        method: method,
+        body: payload,
+        requireAuth: true
+      });
+
+      if (!res._error) {
+        showToast(cid ? 'Kampanya güncellendi!' : 'Kampanya eklendi!', 'success');
+        e.target.reset();
+        document.getElementById('cm-cancel-btn').click();
+        await renderCampaignList();
+      } else {
+        showToast(cid ? 'Kampanya güncellenirken hata' : 'Kampanya eklenirken hata', 'error');
+      }
+      btn.disabled = false;
+      btn.textContent = cid ? 'Güncelle' : 'Kampanyayı Ekle';
+    });
+
+    await renderCampaignList();
+  }
+
+  // Initial load calls
+  const annsResult = await apiFetch('/community/announcements/');
+  document.getElementById('stat-announcements').textContent = annsResult._error ? '?' : annsResult.length;
 }

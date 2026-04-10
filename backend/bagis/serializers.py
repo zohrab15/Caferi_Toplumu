@@ -9,6 +9,11 @@ class CampaignSerializer(serializers.ModelSerializer):
         model = Campaign
         fields = ('id', 'title', 'icon', 'description', 'collected', 'target')
 
+class AdminCampaignSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Campaign
+        fields = '__all__'
+
 class DonationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donation
