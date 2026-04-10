@@ -147,8 +147,8 @@ export async function renderCommunityPage() {
         <div class="card card--accent" style="margin-top:var(--space-lg);text-align:center;padding:var(--space-xl)">
           <div style="font-size:32px;margin-bottom:8px">📞</div>
           <div style="font-weight:700;font-size:var(--font-size-lg);margin-bottom:4px">Acil Durumda Bize Ulaşın</div>
-          <div class="text-muted" style="font-size:var(--font-size-sm);margin-bottom:12px">Camii telefon: +90 312 XXX XX XX</div>
-          <button class="btn btn--primary" id="quick-call-btn">📱 Hemen Ara</button>
+          <div class="text-muted" style="font-size:var(--font-size-sm);margin-bottom:12px">Camii Telefon: +90 505 094 00 83</div>
+          <a href="tel:+905050940083" class="btn btn--primary" style="display:inline-block; text-decoration:none;">📱 Hemen Ara</a>
         </div>
       </div>
     `;
