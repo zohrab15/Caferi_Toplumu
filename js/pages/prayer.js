@@ -242,9 +242,12 @@ function checkPrayerNotification(timings) {
       }
     }
     
-    // Ezan vakti — sadece otomatik ezan açıksa çalışır
-    if (ezanAutoPlay && time === currentKey && !ezanNotified[prayer.key]) {
-      ezanNotified[prayer.key] = true;
+    // Ezan vakti — sadece imsak (Fajr), öğle (Dhuhr) ve akşam (Maghrib) vakitlerinde otomatik ezan okunur
+    const isEzanTime = ['Fajr', 'Dhuhr', 'Maghrib'].includes(prayer.key);
+    
+    // DEV_TEST = Sadece test amaçlı tetikleme
+    if (prayer.forceTest || (ezanAutoPlay && isEzanTime && time === currentKey && !ezanNotified[prayer.key])) {
+      if (!prayer.forceTest) ezanNotified[prayer.key] = true;
 
       // Show browser notification
       if (Notification.permission === 'granted') {
@@ -504,6 +507,18 @@ export async function renderPrayerPage() {
               <span class="toggle__slider"></span>
             </label>
           </div>
+          
+          <!-- Test Button -->
+          <div class="ezan-setting-row" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+            <div class="ezan-setting__info">
+              <span class="ezan-setting__icon">🧪</span>
+              <div>
+                <div class="ezan-setting__label">Ezanı Test Et</div>
+                <div class="ezan-setting__desc" style="font-size:11px;">Namaz vaktinin geldiğini simüle eder</div>
+              </div>
+            </div>
+            <button id="btn-test-ezan" class="btn btn--outline" style="padding: 4px 12px; font-size: 12px;">Test Et</button>
+          </div>
         </div>
       </div>
 
@@ -605,6 +620,27 @@ export async function renderPrayerPage() {
   // Start countdown
   startCountdown(timings);
   
+  // Test Button Event
+  const testBtn = document.getElementById('btn-test-ezan');
+  if (testBtn) {
+    testBtn.addEventListener('click', () => {
+      checkPrayerNotification(timings); // Normally checks time
+      // Forcing a fake prayer event trigger
+      const fakePrayer = { key: 'Fajr', name: 'İmsak (Test)', icon: '🌙', forceTest: true };
+      
+      if (Notification.permission === 'granted') {
+        new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
+          body: `Bu bir test bildirimidir — Ezan okunuyor`,
+          icon: '/assets/favicon.svg',
+          tag: `ezan-test`,
+        });
+      } else if (Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+      playEzan(selectedEzan);
+    });
+  }
+  
   if (Capacitor.isNativePlatform()) {
     scheduleNativeNotifications();
   }
@@ -663,8 +699,9 @@ export async function scheduleNativeNotifications() {
          const [hours, mins] = time.split(':').map(Number);
          const scheduleDate = new Date(y, m - 1, d, hours, mins, 0);
 
-         // Add Ezan Notification
-         if (ezanAutoPlay && scheduleDate.getTime() > now.getTime()) {
+         // Add Ezan Notification - sadece İmsak, Öğle, Akşam
+         const isEzanTime = ['Fajr', 'Dhuhr', 'Maghrib'].includes(prayerKey);
+         if (ezanAutoPlay && isEzanTime && scheduleDate.getTime() > now.getTime()) {
              const pInfo = PRAYER_NAMES.find(p => p.key === prayerKey);
              notifications.push({
                title: `${pInfo ? pInfo.icon + ' ' + pInfo.name : prayerKey} Vakti`,
