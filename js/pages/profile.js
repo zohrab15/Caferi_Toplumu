@@ -130,20 +130,29 @@ export async function renderProfilePage() {
     });
 
     // Check notification status and show button if needed
-    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+    if ('Notification' in window) {
       const pc = document.getElementById('push-perm-container');
-      if (pc) pc.style.display = 'block';
+      const btn = document.getElementById('btn-enable-push');
       
-      document.getElementById('btn-enable-push')?.addEventListener('click', () => {
+      if (pc && btn) {
+        if (Notification.permission === 'granted') {
+           pc.style.display = 'block';
+           btn.innerHTML = '🔄 Bildirim Bağlantısını Yenile';
+        } else if (Notification.permission !== 'denied') {
+           pc.style.display = 'block';
+        }
+      }
+      
+      btn?.addEventListener('click', () => {
         initWebPush(true);
       });
     }
 
     // Hide button if subscribed event fires
     window.addEventListener('pushSubscribed', () => {
-      const pc = document.getElementById('push-perm-container');
-      if (pc) pc.style.display = 'none';
-      showToast('Bildirimler başarıyla açıldı!', 'success');
+      const btn = document.getElementById('btn-enable-push');
+      if (btn) btn.innerHTML = '✅ Bağlandı';
+      showToast('Bildirimler cihazınıza bağlandı!', 'success');
     });
 
 
