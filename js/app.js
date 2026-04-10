@@ -11,7 +11,7 @@ import { renderKvkkPage } from './pages/kvkk.js';
 import { renderAuthPage } from './pages/auth.js';
 import { renderProfilePage } from './pages/profile.js';
 import { renderAdminPage } from './pages/admin.js';
-import { isLoggedIn } from './api.js';
+import { isLoggedIn, apiFetch } from './api.js';
 
 // Current page state
 let currentPage = 'prayer';
