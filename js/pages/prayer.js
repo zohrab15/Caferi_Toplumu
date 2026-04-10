@@ -623,19 +623,40 @@ export async function renderPrayerPage() {
   // Test Button Event
   const testBtn = document.getElementById('btn-test-ezan');
   if (testBtn) {
-    testBtn.addEventListener('click', () => {
-      checkPrayerNotification(timings); // Normally checks time
+    testBtn.addEventListener('click', async () => {
       // Forcing a fake prayer event trigger
       const fakePrayer = { key: 'Fajr', name: 'İmsak (Test)', icon: '🌙', forceTest: true };
       
-      if (Notification.permission === 'granted') {
-        new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
-          body: `Bu bir test bildirimidir — Ezan okunuyor`,
-          icon: '/assets/favicon.svg',
-          tag: `ezan-test`,
-        });
-      } else if (Notification.permission === 'default') {
-        Notification.requestPermission();
+      // Native notification for mobile
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const soundFile = selectedEzan === 'haci-ruslan' ? 'haci_ruslan.mp3' : 'rahim_muazzinzade.mp3';
+          await LocalNotifications.schedule({
+            notifications: [{
+               title: `${fakePrayer.icon} ${fakePrayer.name} Vakti`,
+               body: `Bu bir test bildirimidir — Ezan okunuyor`,
+               id: 9999, // Test ID
+               schedule: { at: new Date(new Date().getTime() + 1000) }, // 1 saniye sonra
+               sound: soundFile,
+               channelId: 'ezan-channel'
+            }]
+          });
+          showAbdestToast({ name: 'Test Bildirimi Gönderildi', icon: '✅' });
+        } catch(e) {
+          console.error("Test bildirim hatasi:", e);
+        }
+      } else {
+        // Web notification
+        if (Notification.permission === 'granted') {
+          new Notification(`${fakePrayer.icon} ${fakePrayer.name} Vakti`, {
+            body: `Bu bir test bildirimidir — Ezan okunuyor`,
+            icon: '/assets/favicon.svg',
+            tag: `ezan-test`,
+          });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission();
+        }
+        showAbdestToast({ name: 'Test (Web)', icon: '✅' });
       }
       playEzan(selectedEzan);
     });
