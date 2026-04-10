@@ -114,47 +114,66 @@ function init() {
 
 // WebPush init
 export async function initWebPush(userInitiated = false) {
-  if ('serviceWorker' in navigator && 'PushManager' in window && isLoggedIn()) {
-    try {
-      let permission = Notification.permission;
-      
-      // Sesi olarak veya sayfa yüklendiğinde otomatik sorulmasını engelle
-      if (permission === 'default' && userInitiated) {
-        permission = await Notification.requestPermission();
-      }
+  if (!('serviceWorker' in navigator)) {
+    if (userInitiated) alert("Tarayıcınız Service Worker desteklemiyor.");
+    return;
+  }
+  if (!('PushManager' in window)) {
+    if (userInitiated) alert("Tarayıcınız (veya telefonunuz) Push bildirimlerini desteklemiyor. (iOS kullanıyorsanız uygulamayı 'Ana Ekrana Ekle' yapmanız gerekebilir.)");
+    return;
+  }
+  if (!isLoggedIn()) {
+    if (userInitiated) alert("Bildirim izni için önce giriş yapmalısınız.");
+    return;
+  }
 
-      if (permission === 'granted') {
-        const swRegistration = await navigator.serviceWorker.ready;
-        const applicationServerKey = urlB64ToUint8Array('BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuB-3qOX7j30CG3EMGWpncwYkU');
-        const subscription = await swRegistration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey
-        });
-        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-            ? 'http://localhost:8000/api' : 'https://caferi-toplumu.onrender.com/api';
-        
-        await fetch(`${API_BASE}/auth/webpush/subscribe/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          },
-          body: JSON.stringify({
-            status_type: 'subscribe',
-            subscription: subscription,
-            browser: navigator.userAgent.includes('Chrome') ? 'chrome' : 'other',
-            user_agent: navigator.userAgent
-          })
-        });
-        
-        if (userInitiated) {
-          // Toast mesajı göstermek isterseniz burada UI feedback verilebilir
-          const ev = new CustomEvent('pushSubscribed');
-          window.dispatchEvent(ev);
-        }
+  try {
+    let permission = Notification.permission;
+    
+    // Sesi olarak veya sayfa yüklendiğinde otomatik sorulmasını engelle
+    if (permission === 'default' && userInitiated) {
+      permission = await Notification.requestPermission();
+    }
+
+    if (permission === 'granted') {
+      const swRegistration = await navigator.serviceWorker.ready;
+      const applicationServerKey = urlB64ToUint8Array('BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuB-3qOX7j30CG3EMGWpncwYkU');
+      const subscription = await swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey
+      });
+      const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+          ? 'http://localhost:8000/api' : 'https://caferi-toplumu.onrender.com/api';
+      
+      const res = await fetch(`${API_BASE}/auth/webpush/subscribe/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify({
+          status_type: 'subscribe',
+          subscription: subscription,
+          browser: navigator.userAgent.includes('Chrome') ? 'chrome' : 'other',
+          user_agent: navigator.userAgent
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error(`Sunucu hatası: ${res.status}`);
       }
-    } catch (e) {
-      console.error('Push registration failed:', e);
+      
+      if (userInitiated) {
+        const ev = new CustomEvent('pushSubscribed');
+        window.dispatchEvent(ev);
+      }
+    } else {
+      if (userInitiated) alert("Bildirim izni reddedildi. Lütfen tarayıcı ayarlarından siteye izin verin.");
+    }
+  } catch (e) {
+    console.error('Push registration failed:', e);
+    if (userInitiated) {
+      alert("Bildirim bağlantısı kurulamadı: " + e.message + "\nLütfen tarayıcınızın bildirim ayarlarını kontrol edin.");
     }
   }
 }
