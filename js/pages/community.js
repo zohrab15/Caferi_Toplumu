@@ -9,6 +9,14 @@ export async function renderCommunityPage() {
     <div class="page" style="text-align:center;padding:40px;">
       <div class="skeleton" style="width:100%;height:150px;border-radius:12px;margin-bottom:20px;"></div>
       <div class="skeleton" style="width:100%;height:300px;border-radius:12px;"></div>
+      
+      <!-- Quick contact -->
+      <div class="card card--accent" style="margin-top:var(--space-lg);text-align:center;padding:var(--space-xl)">
+        <div style="font-size:32px;margin-bottom:8px">📞</div>
+        <div style="font-weight:700;font-size:var(--font-size-lg);margin-bottom:4px">Acil Durumda Bize Ulaşın</div>
+        <div class="text-muted" style="font-size:var(--font-size-sm);margin-bottom:12px">Camii Telefon: +90 505 094 00 83</div>
+        <a href="tel:+905050940083" class="btn btn--primary" style="display:inline-block; text-decoration:none;">📱 Hemen Ara</a>
+      </div>
     </div>
   `;
 
@@ -301,6 +309,18 @@ export async function renderCommunityPage() {
 
   } catch (e) {
     showToast('Bağlantı hatası: Veriler yüklenemedi.', 'error');
-    container.innerHTML = `<div class="page text-center"><p class="text-danger">Bilgiler yüklenirken bir hata oluştu. Lütfen tekrar deneyin.</p></div>`;
+    container.innerHTML = `
+      <div class="page text-center">
+        <p class="text-danger">Bilgiler yüklenirken bir hata oluştu. Lütfen tekrar deneyin.</p>
+        
+        <!-- Quick contact -->
+        <div class="card card--accent" style="margin-top:var(--space-lg);text-align:center;padding:var(--space-xl)">
+          <div style="font-size:32px;margin-bottom:8px">📞</div>
+          <div style="font-weight:700;font-size:var(--font-size-lg);margin-bottom:4px">Acil Durumda Bize Ulaşın</div>
+          <div class="text-muted" style="font-size:var(--font-size-sm);margin-bottom:12px">Camii Telefon: +90 505 094 00 83</div>
+          <a href="tel:+905050940083" class="btn btn--primary" style="display:inline-block; text-decoration:none;">📱 Hemen Ara</a>
+        </div>
+      </div>
+    `;
   }
 }
