@@ -66,10 +66,8 @@ export async function renderCommunityPage() {
           </div>
         </div>
 
-        <!-- Announcements -->
         <div class="section-header">
           <h2 class="section-title">Duyurular</h2>
-          <a href="#" class="section-link">Tümü →</a>
         </div>
         <div class="announcement-list">
           ${announcements.length > 0 ? announcements.map(a => `
